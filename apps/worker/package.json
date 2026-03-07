@@ -1,0 +1,19 @@
+{
+  "name": "@peek/worker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@peek/checker": "workspace:*",
+    "@peek/db": "workspace:*",
+    "playwright": "^1.51.0"
+  },
+  "devDependencies": {
+    "@peek/tsconfig": "workspace:*",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.0"
+  }
+}

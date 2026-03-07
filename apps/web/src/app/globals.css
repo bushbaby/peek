@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: applies dark: utilities when <html class="dark"> */
+@variant dark (&:is(.dark *));
+
+/* ─── Design Tokens ─────────────────────────────────────────────────────────
+   Raw CSS custom properties (--pk-*) defined per theme in @layer base.
+   Exposed as Tailwind utilities (bg-canvas, text-ink, border-line, …)
+   via @theme inline so values update at runtime when .dark is toggled.
+──────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Backgrounds */
+    --pk-canvas:      var(--color-gray-50);   /* page background          */
+    --pk-surface:     #fff;                   /* card / panel / modal     */
+    --pk-ghost:       var(--color-gray-50);   /* outline-btn hover bg     */
+    --pk-icon-hover:  var(--color-gray-100);  /* icon-btn hover bg        */
+    --pk-field:       #fff;                   /* form input background    */
+    --pk-cta:         var(--color-gray-900);  /* primary CTA button       */
+    --pk-cta-hover:   var(--color-gray-700);  /* primary CTA hover        */
+    /* Borders */
+    --pk-line:        var(--color-gray-200);  /* default border           */
+    --pk-line-subtle: var(--color-gray-100);  /* subtle divider / row     */
+    --pk-line-form:   var(--color-gray-300);  /* input / dialog border    */
+    /* Text */
+    --pk-ink:         var(--color-gray-900);  /* primary text             */
+    --pk-ink-soft:    var(--color-gray-700);  /* labels / secondary text  */
+    --pk-ink-muted:   var(--color-gray-500);  /* helper / timestamp text  */
+    --pk-ink-faint:   var(--color-gray-400);  /* icon resting state       */
+    /* Interaction */
+    --pk-focus:       var(--color-gray-900);  /* focus ring & border      */
+  }
+
+  .dark {
+    --pk-canvas:      var(--color-gray-950);
+    --pk-surface:     var(--color-gray-900);
+    --pk-ghost:       var(--color-gray-800);
+    --pk-icon-hover:  var(--color-gray-700);
+    --pk-field:       var(--color-gray-800);
+    --pk-cta:         var(--color-gray-700);
+    --pk-cta-hover:   var(--color-gray-600);
+    --pk-line:        var(--color-gray-800);
+    --pk-line-subtle: var(--color-gray-800);
+    --pk-line-form:   var(--color-gray-700);
+    --pk-ink:         var(--color-gray-100);
+    --pk-ink-soft:    var(--color-gray-300);
+    --pk-ink-muted:   var(--color-gray-400);
+    --pk-ink-faint:   var(--color-gray-500);
+    --pk-focus:       var(--color-gray-500);
+  }
+}
+
+/* Register tokens as Tailwind utilities.
+   bg-canvas, text-ink, border-line, ring-focus, etc. */
+@theme inline {
+  --color-canvas:      var(--pk-canvas);
+  --color-surface:     var(--pk-surface);
+  --color-ghost:       var(--pk-ghost);
+  --color-icon-hover:  var(--pk-icon-hover);
+  --color-field:       var(--pk-field);
+  --color-cta:         var(--pk-cta);
+  --color-cta-hover:   var(--pk-cta-hover);
+  --color-line:        var(--pk-line);
+  --color-line-subtle: var(--pk-line-subtle);
+  --color-line-form:   var(--pk-line-form);
+  --color-ink:         var(--pk-ink);
+  --color-ink-soft:    var(--pk-ink-soft);
+  --color-ink-muted:   var(--pk-ink-muted);
+  --color-ink-faint:   var(--pk-ink-faint);
+  --color-focus:       var(--pk-focus);
+}

@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --version)",
+      "Bash(node -e \"const m = require\\(''/Users/bas/Documents/Projects/Bushbaby.Notifier/node_modules/@supabase/ssr''\\); console.log\\(Object.keys\\(m\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''cookie''\\)\\)\\)\")",
+      "Bash(pnpm --filter @peek/worker build)",
+      "Bash(supabase stop)",
+      "Bash(supabase start)",
+      "Bash(supabase status)",
+      "Bash(curl -s \"http://127.0.0.1:54321/auth/v1/settings\" -H \"apikey: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(grep -A2 '\"\"github\"\"')",
+      "Bash(grep -r \"from ''\\\\./\" packages/db/src packages/checker/src --include=\"*.ts\")",
+      "Bash(pnpm turbo typecheck)",
+      "Bash(psql \"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" -c \"\\\\dt public.*\")",
+      "Bash(supabase db diff)",
+      "Bash(pnpm --filter @peek/web lint)",
+      "Bash(pnpm add @xmldom/xmldom xpath --filter @peek/checker)",
+      "Bash(node -e \"require\\(''playwright''\\)\")",
+      "Bash(supabase migration up)",
+      "Bash(python3 /Users/bas/.claude/skills/ui-ux-pro-max/scripts/search.py \"personal saas tool dark mode minimal monitoring\" --design-system -p \"Peek\")",
+      "Bash(ls /Users/bas/Documents/Projects/Bushbaby.Notifier/apps/web/*.config.*)",
+      "Bash(ls /Users/bas/Documents/Projects/Bushbaby.Notifier/apps/web/*.config.ts)",
+      "Bash(python3 /Users/bas/.claude/skills/ui-ux-pro-max/scripts/search.py \"personal saas tool minimal clean utility dark mode monitoring\" --design-system --persist -p \"Peek\")",
+      "Bash(python3 /Users/bas/.claude/skills/ui-ux-pro-max/scripts/search.py \"dashboard minimal saas dark mode\" --stack nextjs)"
+    ]
+  }
+}
