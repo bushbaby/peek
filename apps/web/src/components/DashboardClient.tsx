@@ -8,6 +8,7 @@ import { TrackedItemRow } from './TrackedItemRow'
 import { AddEditModal } from './AddEditModal'
 import { DeleteConfirmDialog } from './DeleteConfirmDialog'
 import { ThemeToggle } from './ThemeToggle'
+import { Button } from './ui/button'
 
 interface DashboardClientProps {
   items: TrackedItem[]
@@ -67,12 +68,9 @@ export function DashboardClient({ items, userEmail, userId }: DashboardClientPro
             <span className="hidden text-xs text-ink-muted sm:block">{userEmail}</span>
             <ThemeToggle />
             <form action="/auth/signout" method="POST">
-              <button
-                type="submit"
-                className="cursor-pointer rounded-lg border border-line-form px-3 py-1.5 text-xs font-medium text-ink-soft hover:bg-ghost transition-colors duration-150"
-              >
+              <Button type="submit" variant="outline" size="sm">
                 Sign out
-              </button>
+              </Button>
             </form>
           </div>
         </div>
@@ -84,23 +82,17 @@ export function DashboardClient({ items, userEmail, userId }: DashboardClientPro
           <h2 className="text-sm font-medium text-ink-soft">
             {items.length} {items.length === 1 ? 'item' : 'items'} tracked
           </h2>
-          <button
-            onClick={() => setModal({ type: 'add' })}
-            className="cursor-pointer rounded-lg bg-cta px-4 py-2 text-sm font-medium text-white hover:bg-cta-hover transition-colors duration-150"
-          >
+          <Button onClick={() => setModal({ type: 'add' })}>
             + Add item
-          </button>
+          </Button>
         </div>
 
         {items.length === 0 ? (
           <div className="rounded-xl border border-dashed border-line-form bg-surface px-6 py-16 text-center">
             <p className="text-sm text-ink-muted mb-4">No tracked items yet.</p>
-            <button
-              onClick={() => setModal({ type: 'add' })}
-              className="cursor-pointer rounded-lg bg-cta px-4 py-2 text-sm font-medium text-white hover:bg-cta-hover transition-colors duration-150"
-            >
+            <Button onClick={() => setModal({ type: 'add' })}>
               + Add your first item
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="rounded-xl border border-line bg-surface overflow-x-auto">

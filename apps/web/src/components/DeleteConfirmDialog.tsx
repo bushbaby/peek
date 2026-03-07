@@ -2,6 +2,16 @@
 
 import { useTransition, useState } from 'react'
 import { deleteTrackedItemAction } from '@/app/dashboard/actions'
+import { Button } from './ui/button'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from './ui/alert-dialog'
 
 interface DeleteConfirmDialogProps {
   id: string
@@ -26,37 +36,28 @@ export function DeleteConfirmDialog({ id, url, onClose }: DeleteConfirmDialogPro
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 dark:bg-black/60"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="w-full max-w-sm rounded-xl bg-surface shadow-xl p-6">
-        <h2 className="text-base font-semibold mb-2">Remove tracked item?</h2>
-        <p className="text-sm text-ink-muted mb-1">
-          This will permanently delete the tracked item and its snapshot data.
-        </p>
-        <p className="text-sm font-medium text-ink truncate mb-5">{url}</p>
+    <AlertDialog open onOpenChange={(open) => !open && onClose()}>
+      <AlertDialogContent size="sm">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Remove tracked item?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will permanently delete the tracked item and its snapshot data.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <p className="text-sm font-medium truncate">{url}</p>
 
         {error && (
-          <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">{error}</p>
+          <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
         )}
 
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="cursor-pointer rounded-lg border border-line-form px-4 py-2 text-sm font-medium text-ink-soft hover:bg-ghost transition-colors duration-150"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={isPending}
-            className="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50 transition-colors duration-150 dark:bg-red-700 dark:hover:bg-red-600"
-          >
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button variant="destructive" disabled={isPending} onClick={handleDelete}>
             {isPending ? 'Removing…' : 'Remove'}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

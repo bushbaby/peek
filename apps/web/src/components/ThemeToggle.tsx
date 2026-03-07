@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Button } from './ui/button'
 
 const STORAGE_KEY = 'peek-theme'
 
@@ -30,14 +31,16 @@ export function ThemeToggle() {
   }
 
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="icon-sm"
       onClick={toggle}
       aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
       title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-      className="cursor-pointer rounded p-1.5 text-ink-muted hover:text-ink-soft hover:bg-icon-hover transition-colors duration-150"
+      className="text-ink-muted hover:text-ink-soft"
     >
       {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-    </button>
+    </Button>
   )
 }
 

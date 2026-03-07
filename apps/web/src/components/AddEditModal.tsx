@@ -3,6 +3,10 @@
 import { useTransition, useState, useEffect, useRef } from 'react'
 import type { TrackedItem } from '@peek/db'
 import { addTrackedItemAction, updateTrackedItemAction } from '@/app/dashboard/actions'
+import { Button } from './ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from './ui/dialog'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
 
 interface AddEditModalProps {
   item?: TrackedItem
@@ -38,30 +42,16 @@ export function AddEditModal({ item, onClose }: AddEditModalProps) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 dark:bg-black/60"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="w-full max-w-md rounded-xl bg-surface shadow-xl">
-        <div className="flex items-center justify-between border-b border-line px-6 py-4">
-          <h2 className="text-base font-semibold">
-            {item ? 'Edit tracked item' : 'Add tracked item'}
-          </h2>
-          <button
-            onClick={onClose}
-            className="cursor-pointer rounded p-1 text-ink-faint hover:text-ink-soft transition-colors duration-150"
-            aria-label="Close"
-          >
-            ✕
-          </button>
-        </div>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{item ? 'Edit tracked item' : 'Add tracked item'}</DialogTitle>
+        </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 p-6">
-          <div>
-            <label htmlFor="url" className="block text-sm font-medium text-ink-soft mb-1">
-              URL
-            </label>
-            <input
+        <form id="tracked-item-form" onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="url">URL</Label>
+            <Input
               ref={urlRef}
               id="url"
               name="url"
@@ -69,51 +59,37 @@ export function AddEditModal({ item, onClose }: AddEditModalProps) {
               required
               defaultValue={item?.url}
               placeholder="https://example.com/page"
-              className="w-full rounded-lg border border-line-form bg-field px-3 py-2 text-sm text-ink placeholder-ink-faint focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus"
             />
           </div>
 
-          <div>
-            <label htmlFor="selector" className="block text-sm font-medium text-ink-soft mb-1">
-              Selector
-            </label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="selector">Selector</Label>
+            <Input
               id="selector"
               name="selector"
               type="text"
               required
               defaultValue={item?.selector}
-              placeholder="#price or [data-testid=&quot;stock&quot;] or xpath=//span[@itemprop=&quot;price&quot;]"
-              className="w-full rounded-lg border border-line-form bg-field px-3 py-2 text-sm text-ink placeholder-ink-faint focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus"
+              placeholder='#price or [data-testid="stock"]'
             />
-            <p className="mt-1 text-xs text-ink-muted">
+            <p className="text-xs text-muted-foreground">
               CSS (default), <code className="font-mono">xpath=//span[@class=&quot;price&quot;]</code>, or <code className="font-mono">text=In stock</code>.{' '}
-              Prefer <code className="font-mono">#id</code> or <code className="font-mono">[data-testid=&quot;…&quot;]</code> for most reliable tracking.
+              Prefer <code className="font-mono">#id</code> or <code className="font-mono">[data-testid=&quot;…&quot;]</code>.
             </p>
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">{error}</p>
+            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
           )}
-
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="cursor-pointer rounded-lg border border-line-form px-4 py-2 text-sm font-medium text-ink-soft hover:bg-ghost transition-colors duration-150"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="cursor-pointer rounded-lg bg-cta px-4 py-2 text-sm font-medium text-white hover:bg-cta-hover disabled:opacity-50 transition-colors duration-150"
-            >
-              {isPending ? 'Saving…' : item ? 'Save changes' : 'Add item'}
-            </button>
-          </div>
         </form>
-      </div>
-    </div>
+
+        <DialogFooter>
+          <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+          <Button type="submit" form="tracked-item-form" disabled={isPending}>
+            {isPending ? 'Saving…' : item ? 'Save changes' : 'Add item'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

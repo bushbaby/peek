@@ -4,6 +4,8 @@ import { useTransition } from 'react'
 import type { TrackedItem } from '@peek/db'
 import { StatusBadge } from './StatusBadge'
 import { togglePauseAction } from '@/app/dashboard/actions'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import { Button } from './ui/button'
 
 interface TrackedItemRowProps {
   item: TrackedItem
@@ -67,6 +69,16 @@ export function TrackedItemRow({
             {truncate(item.last_error_message, 50)}
           </p>
         )}
+        {item.last_snapshot_snippet && item.last_status !== 'error' && (
+          <Popover>
+            <PopoverTrigger className="mt-0.5 block max-w-48 truncate text-left text-xs text-ink-faint cursor-pointer hover:text-ink-muted transition-colors duration-150">
+              {truncate(item.last_snapshot_snippet, 60)}
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="start" className="w-72 text-xs text-ink-soft leading-relaxed wrap-break-word">
+              {item.last_snapshot_snippet}
+            </PopoverContent>
+          </Popover>
+        )}
       </td>
 
       <td className="hidden sm:table-cell px-4 py-3 text-xs text-ink-muted">
@@ -80,43 +92,51 @@ export function TrackedItemRow({
       <td className="px-4 py-3">
         <div className="flex items-center gap-1">
           {/* Pause/Resume */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={handlePauseToggle}
             disabled={isPendingPause}
             title={item.is_paused ? 'Resume' : 'Pause'}
-            className="cursor-pointer rounded p-1.5 text-ink-faint hover:text-ink-soft hover:bg-icon-hover disabled:opacity-40 transition-colors duration-150"
+            className="text-ink-faint hover:text-ink-soft"
           >
             {item.is_paused ? <PlayIcon /> : <PauseIcon />}
-          </button>
+          </Button>
 
           {/* Edit */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={() => onEdit(item)}
             title="Edit"
-            className="cursor-pointer rounded p-1.5 text-ink-faint hover:text-ink-soft hover:bg-icon-hover transition-colors duration-150"
+            className="text-ink-faint hover:text-ink-soft"
           >
             <EditIcon />
-          </button>
+          </Button>
 
           {/* Delete */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={() => onDelete(item)}
             title="Remove"
-            className="cursor-pointer rounded p-1.5 text-ink-faint hover:text-red-600 hover:bg-red-50 transition-colors duration-150 dark:hover:text-red-400 dark:hover:bg-red-900/20"
+            className="text-ink-faint hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-900/20"
           >
             <TrashIcon />
-          </button>
+          </Button>
 
           {/* Check now — local dev only */}
           {isDev && (
-            <button
+            <Button
+              variant="ghost"
+              size="icon-sm"
               onClick={() => onCheckNow?.(item.id)}
               disabled={isChecking}
               title="Check now (dev)"
-              className="cursor-pointer rounded p-1.5 text-blue-400 hover:text-blue-600 hover:bg-blue-50 disabled:opacity-40 transition-colors duration-150 dark:hover:text-blue-400 dark:hover:bg-blue-900/20"
+              className="text-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-blue-900/20"
             >
               <RefreshIcon spinning={isChecking} />
-            </button>
+            </Button>
           )}
         </div>
       </td>

@@ -22,7 +22,11 @@
       "Bash(ls /Users/bas/Documents/Projects/Bushbaby.Notifier/apps/web/*.config.*)",
       "Bash(ls /Users/bas/Documents/Projects/Bushbaby.Notifier/apps/web/*.config.ts)",
       "Bash(python3 /Users/bas/.claude/skills/ui-ux-pro-max/scripts/search.py \"personal saas tool minimal clean utility dark mode monitoring\" --design-system --persist -p \"Peek\")",
-      "Bash(python3 /Users/bas/.claude/skills/ui-ux-pro-max/scripts/search.py \"dashboard minimal saas dark mode\" --stack nextjs)"
+      "Bash(python3 /Users/bas/.claude/skills/ui-ux-pro-max/scripts/search.py \"dashboard minimal saas dark mode\" --stack nextjs)",
+      "Bash(npx shadcn@latest init --defaults)",
+      "Bash(npx shadcn@latest init --defaults -c apps/web)",
+      "Bash(npx shadcn@latest add popover -c apps/web)",
+      "Bash(npx shadcn@latest add dialog alert-dialog badge input label -c apps/web)"
     ]
   }
 }
