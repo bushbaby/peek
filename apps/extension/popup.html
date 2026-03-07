@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peek</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      background: #fff;
+      color: #111;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header img { width: 20px; height: 20px; }
+    .header span { font-weight: 600; font-size: 14px; }
+
+    .body { padding: 14px; }
+
+    .email {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background 0.1s;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    #btn-pick {
+      background: #111;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    #btn-pick:hover:not(:disabled) { background: #222; }
+
+    #btn-signout, #btn-signin {
+      background: transparent;
+      border: 1px solid #d1d5db;
+      color: #374151;
+    }
+
+    #btn-signout:hover, #btn-signin:hover { background: #f3f4f6; }
+
+    .notice {
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="icons/icon48.png" alt="" />
+    <span>Peek</span>
+  </div>
+  <div class="body" id="root">
+    <p class="notice">Loading…</p>
+  </div>
+  <script type="module" src="src/popup.ts"></script>
+</body>
+</html>

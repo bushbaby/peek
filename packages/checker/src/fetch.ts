@@ -1,5 +1,6 @@
 import { load } from 'cheerio'
 import { validateUrl } from './validate'
+import { parseSelectorType } from '@peek/selector'
 
 export interface FetchOptions {
   /** Max time in ms for Playwright navigation. Default: 15000 */
@@ -11,21 +12,6 @@ export interface FetchOptions {
 export type FetchResult =
   | { html: string; method: 'playwright' | 'static' }
   | { error: string }
-
-type SelectorType = 'css' | 'xpath' | 'text'
-
-/**
- * Parse a selector string into its type and value.
- * Supports:
- *   css=   (default, prefix optional)  — standard CSS selector
- *   xpath= — XPath expression, e.g. xpath=//span[@itemprop="price"]
- *   text=  — text content match, e.g. text=In stock
- */
-function parseSelectorType(selector: string): { type: SelectorType; value: string } {
-  if (selector.startsWith('xpath=')) return { type: 'xpath', value: selector.slice(6) }
-  if (selector.startsWith('text=')) return { type: 'text', value: selector.slice(5) }
-  return { type: 'css', value: selector }
-}
 
 /**
  * Fetch a page and extract the innerHTML of the first matching element.

@@ -5,7 +5,8 @@
       "Bash(potrace logo.pbm --svg -o logo-raw.svg)",
       "Bash(inkscape --action-list)",
       "Bash(inkscape logo-transparent.png --actions=\"select-all;object-trace\" --export-filename=logo-inkscape.svg --export-type=svg)",
-      "Bash(python3 -:*)"
+      "Bash(python3 -:*)",
+      "Bash(pnpm install --silent)"
     ],
     "additionalDirectories": [
       "/Users/bas/Documents/Projects/Bushbaby.Notifier/apps/web/src/app/auth/signin"
