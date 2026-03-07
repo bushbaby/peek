@@ -9,6 +9,7 @@ import { AddEditModal } from './AddEditModal'
 import { DeleteConfirmDialog } from './DeleteConfirmDialog'
 import { ThemeToggle } from './ThemeToggle'
 import { Button } from './ui/button'
+import Image from 'next/image'
 
 interface DashboardClientProps {
   items: TrackedItem[]
@@ -61,9 +62,12 @@ export function DashboardClient({ items, userEmail, userId }: DashboardClientPro
   return (
     <div className="min-h-screen bg-canvas">
       {/* Header */}
-      <header className="border-b border-line bg-surface px-4 py-3">
+      <header className="border-b border-line bg-surface pr-4 py-3">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <h1 className="text-lg font-semibold tracking-tight">Peek</h1>
+          <div className="flex items-center gap-2">
+            <Image src="/logo.svg" alt="Peek logo" width={28} height={28} className="dark:invert" />
+            <h1 className="text-lg font-semibold tracking-tight">Peek</h1>
+          </div>
           <div className="flex items-center gap-3">
             <span className="hidden text-xs text-ink-muted sm:block">{userEmail}</span>
             <ThemeToggle />

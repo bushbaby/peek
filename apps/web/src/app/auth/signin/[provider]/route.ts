@@ -1,12 +1,21 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import type { Provider } from '@supabase/supabase-js'
 
-export async function POST(request: Request) {
+const ALLOWED_PROVIDERS: Provider[] = ['github', 'google']
+
+export async function POST(request: Request, { params }: { params: Promise<{ provider: string }> }) {
+  const { provider } = await params
+
+  if (!ALLOWED_PROVIDERS.includes(provider as Provider)) {
+    return NextResponse.redirect(new URL('/?error=oauth_failed', request.url), { status: 302 })
+  }
+
   const origin = new URL(request.url).origin
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
+    provider: provider as Provider,
     options: {
       redirectTo: `${origin}/auth/callback`,
     },

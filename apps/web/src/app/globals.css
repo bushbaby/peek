@@ -15,7 +15,7 @@
 @layer base {
   :root {
     /* Backgrounds */
-    --pk-canvas:      var(--color-gray-50);   /* page background          */
+    --pk-canvas:      var(--color-pink-50);   /* page background          */
     --pk-surface:     #fff;                   /* card / panel / modal     */
     --pk-ghost:       var(--color-gray-50);   /* outline-btn hover bg     */
     --pk-icon-hover:  var(--color-gray-100);  /* icon-btn hover bg        */

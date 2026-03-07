@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import Image from 'next/image'
+import { Button } from '@/components/ui/button'
 
 export default async function Home() {
   const supabase = await createClient()
@@ -15,29 +17,40 @@ export default async function Home() {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
+      <div className="w-full flex flex-col items-start ">
+        <Image
+          src="/logo.svg"
+          alt="Peek logo"
+          width={160}
+          height={160}
+          className="-mx-4 dark:invert"
+          priority
+        />
+        </div>
       <div className="max-w-sm w-full text-center">
+        
         <h1 className="text-4xl font-bold tracking-tight mb-2">Peek</h1>
         <p className="text-ink-muted mb-10">
           Monitor specific parts of web pages. Get notified by email when content changes.
         </p>
         <div className="flex flex-col gap-3">
-          <form action="/auth/signin" method="POST">
-            <button
+          <form action="/auth/signin/github" method="POST">
+            <Button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-cta px-5 py-3 text-sm font-medium text-white hover:bg-cta-hover transition-colors duration-150 cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-line-form bg-surface px-5 py-3 text-sm font-medium text-ink hover:bg-ghost transition-colors duration-150 cursor-pointer"
             >
               <GitHubIcon />
               Sign in with GitHub
-            </button>
+            </Button>
           </form>
           <form action="/auth/signin/google" method="POST">
-            <button
+            <Button
               type="submit"
               className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-line-form bg-surface px-5 py-3 text-sm font-medium text-ink hover:bg-ghost transition-colors duration-150 cursor-pointer"
             >
               <GoogleIcon />
               Sign in with Google
-            </button>
+            </Button>
           </form>
         </div>
       </div>

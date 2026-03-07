@@ -27,7 +27,13 @@
       "Bash(npx shadcn@latest init --defaults -c apps/web)",
       "Bash(npx shadcn@latest add popover -c apps/web)",
       "Bash(npx shadcn@latest add dialog alert-dialog badge input label -c apps/web)",
-      "Bash(pnpm --filter @peek/checker test)"
+      "Bash(pnpm --filter @peek/checker test)",
+      "Bash(curl -L -o /Users/bas/Documents/Projects/Bushbaby.Notifier/apps/web/public/logo.jpg \"https://i.pinimg.com/736x/77/fa/cc/77facc4484241327c75bcdb2a2f5c5ef.jpg\")",
+      "Bash(curl -L -A \"Mozilla/5.0\" -o /Users/bas/Documents/Projects/Bushbaby.Notifier/apps/web/public/logo.jpg \"https://i.pinimg.com/736x/77/fa/cc/77facc4484241327c75bcdb2a2f5c5ef.jpg\")",
+      "Bash(convert -version)",
+      "Bash(inkscape --version)",
+      "Bash(magick logo.jpg -alpha set -fuzz 8% -draw \"color 0,0 floodfill\" -draw \"color 499,0 floodfill\" -draw \"color 0,499 floodfill\" -draw \"color 499,499 floodfill\" logo-transparent.png)",
+      "Bash(brew install potrace)"
     ]
   }
 }
