@@ -99,6 +99,9 @@ function onMouseMove(e: MouseEvent) {
 }
 
 function onClick(e: MouseEvent) {
+  // Clicks inside the Shadow DOM (panel, toolbar) are retargeted to shadowHost —
+  // let those through so buttons work.
+  if (e.target === shadowHost) return
   suppressEvent(e)
   if (lockedEl) return
   const el = document.elementFromPoint(e.clientX, e.clientY)
@@ -111,6 +114,7 @@ function onKeyDown(e: KeyboardEvent) {
 }
 
 function suppressEvent(e: Event) {
+  if ((e as MouseEvent).target === shadowHost) return
   e.stopPropagation()
   e.preventDefault()
 }

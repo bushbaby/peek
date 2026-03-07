@@ -31,6 +31,7 @@ function renderSignedIn(root: HTMLElement, email: string) {
   root.innerHTML = `
     <p class="email">${email}</p>
     <button id="btn-pick">Pick element</button>
+    <button id="btn-dashboard">Open dashboard</button>
     <button id="btn-signout">Sign out</button>
   `
 
@@ -41,6 +42,11 @@ function renderSignedIn(root: HTMLElement, email: string) {
       return
     }
     await chrome.tabs.sendMessage(tab.id, { type: 'START_PICKER' })
+    window.close()
+  })
+
+  document.getElementById('btn-dashboard')!.addEventListener('click', () => {
+    void chrome.tabs.create({ url: `${PEEK_URL}/dashboard` })
     window.close()
   })
 
