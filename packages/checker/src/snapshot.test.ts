@@ -88,7 +88,7 @@ describe('hasChanged', () => {
     expect(hasChanged('abc', 'abc')).toBe(false)
   })
 
-  it('returns true when previous hash is null (first check)', () => {
-    expect(hasChanged(null, 'abc')).toBe(true)
+  it('returns false when previous hash is null (no baseline yet)', () => {
+    expect(hasChanged(null, 'abc')).toBe(false)
   })
 })

@@ -50,3 +50,46 @@ export async function sendNotification(
 
   await transport.sendMail({ from: config.from, to, subject, text })
 }
+
+/**
+ * Send a notification for selector_missing (treated as a change event) or a
+ * technical error (network failure, etc.). Only called on status transition.
+ */
+export async function sendErrorNotification(
+  config: SmtpConfig,
+  to: string,
+  item: TrackedItem,
+  status: 'selector_missing' | 'error',
+  errorMessage: string,
+): Promise<void> {
+  const transport = nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: config.port === 465,
+    auth: { user: config.user, pass: config.pass },
+  })
+
+  const hostname = new URL(item.url).hostname
+
+  const subject =
+    status === 'selector_missing'
+      ? `[Peek] Content no longer detected: ${hostname}`
+      : `[Peek] Check error: ${hostname}`
+
+  const text = [
+    status === 'selector_missing'
+      ? `The tracked element is no longer found on the page — it may have been removed or the page structure changed.`
+      : `An error occurred while checking the tracked page.`,
+    ``,
+    `URL:      ${item.url}`,
+    `Selector: ${item.selector}`,
+    `Detected: ${new Date().toUTCString()}`,
+    ``,
+    status === 'selector_missing' ? `Detail: ${errorMessage}` : `Error: ${errorMessage}`,
+    ``,
+    `---`,
+    `Managed at https://peek.bushbaby.dev`,
+  ].join('\n')
+
+  await transport.sendMail({ from: config.from, to, subject, text })
+}

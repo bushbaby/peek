@@ -26,7 +26,8 @@
       "Bash(npx shadcn@latest init --defaults)",
       "Bash(npx shadcn@latest init --defaults -c apps/web)",
       "Bash(npx shadcn@latest add popover -c apps/web)",
-      "Bash(npx shadcn@latest add dialog alert-dialog badge input label -c apps/web)"
+      "Bash(npx shadcn@latest add dialog alert-dialog badge input label -c apps/web)",
+      "Bash(pnpm --filter @peek/checker test)"
     ]
   }
 }

@@ -1,4 +1,5 @@
 export * from './fetch'
 export * from './snapshot'
 export * from './email'
+export * from './notify'
 export * from './validate'

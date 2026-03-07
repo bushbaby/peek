@@ -4,7 +4,7 @@ import {
   updateSnapshot,
   getUserEmail,
 } from '@peek/db'
-import { fetchPage, computeSnapshot, hasChanged, sendNotification } from '@peek/checker'
+import { fetchPage, computeSnapshot, sendNotification, sendErrorNotification, decideNotification } from '@peek/checker'
 import type { SmtpConfig } from '@peek/checker'
 
 function getSmtpConfig(): SmtpConfig {
@@ -37,6 +37,18 @@ async function main() {
 
       if ('error' in result) {
         const status = result.error === 'selector_missing' ? 'selector_missing' : 'error'
+        const decision = decideNotification(item.last_status, item.last_snapshot_hash, result)
+
+        if (decision.kind === 'error') {
+          try {
+            const email = await getUserEmail(supabase, item.user_id)
+            await sendErrorNotification(smtpConfig, email, item, decision.status, decision.message)
+            console.log(`[worker] Notification sent to ${email} (${decision.status})`)
+          } catch (emailErr) {
+            console.error(`[worker] Failed to send notification for item ${item.id}:`, emailErr)
+          }
+        }
+
         await updateSnapshot(supabase, item.id, {
           last_status: status,
           last_error_message: result.error,
@@ -47,7 +59,8 @@ async function main() {
       }
 
       const snapshot = computeSnapshot(result.html)
-      const changed = hasChanged(item.last_snapshot_hash, snapshot.hash)
+      const decision = decideNotification(item.last_status, item.last_snapshot_hash, { newHash: snapshot.hash })
+      const changed = decision.kind === 'changed'
 
       if (changed) {
         console.log(`[worker] Change detected for item ${item.id}`)
