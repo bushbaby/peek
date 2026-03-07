@@ -39,7 +39,7 @@ jobs:
         run: pnpm turbo build --filter=@peek/worker...
 
       - name: Run checks
-        run: node apps/worker/dist/index.mjs
+        run: node apps/worker/dist/index.js
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
