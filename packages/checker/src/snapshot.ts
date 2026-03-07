@@ -45,5 +45,6 @@ export function computeSnapshot(innerHTML: string): Snapshot {
 }
 
 export function hasChanged(oldHash: string | null, newHash: string): boolean {
+  if (oldHash === null) return false
   return oldHash !== newHash
 }
