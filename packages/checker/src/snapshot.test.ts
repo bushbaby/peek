@@ -22,10 +22,10 @@ describe('computeSnapshot', () => {
     expect(result.snippet).toContain('world')
   })
 
-  it('snippet is capped at 200 characters', () => {
-    const longText = 'x'.repeat(300)
+  it('snippet is capped at 1000 characters', () => {
+    const longText = 'x'.repeat(1200)
     const result = computeSnapshot(`<p>${longText}</p>`)
-    expect(result.snippet.length).toBeLessThanOrEqual(200)
+    expect(result.snippet.length).toBeLessThanOrEqual(1000)
   })
 
   it('returns a SHA-256 hex hash (64 chars)', () => {
