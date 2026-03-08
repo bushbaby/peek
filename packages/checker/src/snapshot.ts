@@ -40,7 +40,7 @@ export function computeSnapshot(innerHTML: string): Snapshot {
     .replace(/&[a-z]+;/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim()
-    .slice(0, 200)
+    .slice(0, 1000)
   return { hash, snippet }
 }
 

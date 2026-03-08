@@ -58,7 +58,10 @@ export function DashboardClient({ items, userEmail, userId }: DashboardClientPro
     void fetch(`/api/dev/check/${id}?email=true`, { method: 'POST' })
       .then((res) => res.json())
       .then((json) => {
-        setCheckResults((prev) => ({ ...prev, [id]: json.status ?? (json.error || 'error') }))
+        const display = json.status === 'error' || json.status === 'selector_missing'
+          ? `${json.status}: ${json.error ?? '?'}`
+          : (json.status ?? json.error ?? 'error')
+        setCheckResults((prev) => ({ ...prev, [id]: display }))
       })
       .catch(() => {
         setCheckResults((prev) => ({ ...prev, [id]: 'error' }))

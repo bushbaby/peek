@@ -46,8 +46,8 @@ export async function POST(
   const changed = hasChanged(item.last_snapshot_hash, snapshot.hash)
 
   await updateSnapshot(supabase, id, {
-    last_snapshot_hash: changed ? snapshot.hash : item.last_snapshot_hash,
-    last_snapshot_snippet: changed ? snapshot.snippet : item.last_snapshot_snippet,
+    last_snapshot_hash: snapshot.hash,
+    last_snapshot_snippet: snapshot.snippet,
     last_status: changed ? 'changed' : 'ok',
     last_error_message: null,
     last_checked_at: new Date().toISOString(),
