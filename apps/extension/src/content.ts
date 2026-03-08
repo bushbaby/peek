@@ -32,10 +32,32 @@ let highlightEl: HTMLElement | null = null
 let panelEl: HTMLElement | null = null
 let toolbarEl: HTMLElement | null = null
 
+// ─── Private network guard ────────────────────────────────────────────────────
+
+const PRIVATE_PATTERNS = [
+  /^localhost$/i,
+  /^127\./,
+  /^10\./,
+  /^172\.(1[6-9]|2[0-9]|3[01])\./,
+  /^192\.168\./,
+  /^169\.254\./,
+  /^::1$/,
+  /\.local$/i,
+]
+
+function isPrivateHostname(hostname: string): boolean {
+  return PRIVATE_PATTERNS.some((r) => r.test(hostname))
+}
+
 // ─── Initialise ──────────────────────────────────────────────────────────────
 
 function init() {
   if (document.getElementById('__peek_host__')) return // already injected
+
+  if (isPrivateHostname(window.location.hostname)) {
+    showPrivateNetworkMessage()
+    return
+  }
 
   shadowHost = document.createElement('div')
   shadowHost.id = '__peek_host__'
@@ -69,6 +91,29 @@ function init() {
   document.addEventListener('contextmenu', suppressEvent, true)
   document.addEventListener('scroll', onScroll, true)
   window.addEventListener('resize', onScroll)
+}
+
+function showPrivateNetworkMessage() {
+  shadowHost = document.createElement('div')
+  shadowHost.id = '__peek_host__'
+  shadowHost.style.cssText = 'all: initial; position: fixed; inset: 0; pointer-events: none; z-index: 2147483647;'
+  document.body.appendChild(shadowHost)
+  shadow = shadowHost.attachShadow({ mode: 'open' })
+
+  const banner = document.createElement('div')
+  banner.style.cssText = `
+    position: fixed; top: 0; left: 0; right: 0; pointer-events: auto;
+    background: #7f1d1d; color: #fff; font: 500 12px/1 -apple-system, sans-serif;
+    padding: 7px 12px; display: flex; align-items: center; gap: 8px; z-index: 2147483647;
+  `
+  banner.innerHTML = `
+    <span>Peek can't track pages on private networks (${escapeHtml(window.location.hostname)})</span>
+    <button id="__peek_close__" style="margin-left:auto;background:none;border:none;color:#fff;cursor:pointer;font-size:16px;line-height:1;opacity:.8">×</button>
+  `
+  shadow.appendChild(banner)
+
+  document.addEventListener('keydown', onKeyDown, true)
+  banner.querySelector('#__peek_close__')!.addEventListener('click', cleanup)
 }
 
 function cleanup() {

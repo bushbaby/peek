@@ -8,20 +8,7 @@ import {
   deleteTrackedItem,
   setPaused,
 } from '@peek/db'
-import { isValidSelector } from '@peek/checker'
-
-function validateUrl(raw: string): string {
-  let parsed: URL
-  try {
-    parsed = new URL(raw)
-  } catch {
-    throw new Error('Invalid URL — must be a valid absolute URL')
-  }
-  if (!['http:', 'https:'].includes(parsed.protocol)) {
-    throw new Error('URL must use HTTP or HTTPS')
-  }
-  return parsed.toString()
-}
+import { isValidSelector, validateUrl } from '@peek/checker'
 
 async function getAuthenticatedClient() {
   const supabase = await createClient()
@@ -33,7 +20,9 @@ async function getAuthenticatedClient() {
 }
 
 export async function addTrackedItemAction(formData: FormData) {
-  const url = validateUrl(String(formData.get('url') ?? ''))
+  const raw = String(formData.get('url') ?? '')
+  await validateUrl(raw)
+  const url = new URL(raw).toString()
   const selector = String(formData.get('selector') ?? '').trim()
 
   if (!selector) throw new Error('CSS selector is required')
@@ -45,7 +34,9 @@ export async function addTrackedItemAction(formData: FormData) {
 }
 
 export async function updateTrackedItemAction(id: string, formData: FormData) {
-  const url = validateUrl(String(formData.get('url') ?? ''))
+  const raw = String(formData.get('url') ?? '')
+  await validateUrl(raw)
+  const url = new URL(raw).toString()
   const selector = String(formData.get('selector') ?? '').trim()
 
   if (!selector) throw new Error('CSS selector is required')

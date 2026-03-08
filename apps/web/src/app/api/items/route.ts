@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { insertTrackedItem } from '@peek/db'
+import { validateUrl } from '@peek/checker'
 
 export async function POST(request: Request) {
   // Validate auth token from Authorization header (used by the browser extension)
@@ -41,6 +42,15 @@ export async function POST(request: Request) {
   }
   if (typeof selector !== 'string' || !selector.trim()) {
     return NextResponse.json({ error: 'selector is required', field: 'selector' }, { status: 422, headers: corsHeaders() })
+  }
+
+  try {
+    await validateUrl(url.trim())
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Invalid URL', field: 'url' },
+      { status: 422, headers: corsHeaders() },
+    )
   }
 
   try {
