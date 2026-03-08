@@ -9,8 +9,8 @@ import { AddEditModal } from './AddEditModal'
 import { DeleteConfirmDialog } from './DeleteConfirmDialog'
 import { ThemeToggle } from './ThemeToggle'
 import { Button } from './ui/button'
+import { ExtensionPopover } from './ExtensionPopover'
 import Image from 'next/image'
-import { PuzzleIcon } from 'lucide-react'
 
 interface DashboardClientProps {
   items: TrackedItem[]
@@ -76,17 +76,7 @@ export function DashboardClient({ items, userEmail, userId }: DashboardClientPro
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden text-xs text-ink-muted sm:block">{userEmail}</span>
-            {isChrome && (
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-ink-muted hover:bg-ghost hover:text-ink transition-colors"
-              >
-                <PuzzleIcon className="h-3.5 w-3.5" />
-                Get extension
-              </a>
-            )}
+            {isChrome && <ExtensionPopover />}
             <ThemeToggle />
             <form action="/auth/signout" method="POST">
               <Button type="submit" variant="outline" size="sm">
