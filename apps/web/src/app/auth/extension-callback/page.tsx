@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
+import Link from 'next/link'
 
 type Status = 'connecting' | 'done' | 'error'
 
@@ -57,12 +58,12 @@ export default function ExtensionCallbackPage() {
                 You need to be signed in to Peek before the extension can connect.
               </p>
             </div>
-            <a
+            <Link
               href="/auth/signin"
               className="inline-flex items-center justify-center rounded-md bg-ink text-canvas px-4 py-2 text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               Sign in to Peek
-            </a>
+            </Link>
             <p className="text-xs text-ink-muted">
               After signing in, click <strong>Connect Peek extension</strong> in the extension popup again.
             </p>
