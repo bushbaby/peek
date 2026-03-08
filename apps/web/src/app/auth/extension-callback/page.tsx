@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import Image from 'next/image'
 
 type Status = 'connecting' | 'done' | 'error'
 
@@ -36,18 +37,38 @@ export default function ExtensionCallbackPage() {
   }, [])
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-canvas text-ink">
-      {status === 'connecting' && (
-        <p className="text-sm text-ink-muted">Connecting to Peek extension…</p>
-      )}
-      {status === 'done' && (
-        <p className="text-sm text-ink-muted">Connected. This tab will close shortly.</p>
-      )}
-      {status === 'error' && (
-        <p className="text-sm text-red-500">
-          Authentication failed. Please close this tab and try again.
-        </p>
-      )}
+    <main className="min-h-screen flex items-center justify-center bg-canvas">
+      <div className="flex flex-col items-center gap-6 text-center max-w-sm px-6">
+        <Image src="/logo.svg" alt="Peek" width={36} height={36} className="dark:invert" />
+
+        {status === 'connecting' && (
+          <p className="text-sm text-ink-muted">Connecting to Peek extension…</p>
+        )}
+
+        {status === 'done' && (
+          <p className="text-sm text-ink-muted">Connected. This tab will close shortly.</p>
+        )}
+
+        {status === 'error' && (
+          <>
+            <div className="space-y-2">
+              <h1 className="text-base font-semibold text-ink">Sign in to connect the extension</h1>
+              <p className="text-sm text-ink-muted">
+                You need to be signed in to Peek before the extension can connect.
+              </p>
+            </div>
+            <a
+              href="/auth/signin"
+              className="inline-flex items-center justify-center rounded-md bg-ink text-canvas px-4 py-2 text-sm font-semibold hover:opacity-90 transition-opacity"
+            >
+              Sign in to Peek
+            </a>
+            <p className="text-xs text-ink-muted">
+              After signing in, click <strong>Connect Peek extension</strong> in the extension popup again.
+            </p>
+          </>
+        )}
+      </div>
     </main>
   )
 }
