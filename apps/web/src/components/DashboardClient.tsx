@@ -7,9 +7,8 @@ import { createClient } from '@/lib/supabase/client'
 import { TrackedItemRow } from './TrackedItemRow'
 import { AddEditModal } from './AddEditModal'
 import { DeleteConfirmDialog } from './DeleteConfirmDialog'
-import { ThemeToggle } from './ThemeToggle'
 import { Button } from './ui/button'
-import { ExtensionPopover } from './ExtensionPopover'
+import { UserMenu } from './UserMenu'
 import Image from 'next/image'
 
 interface DashboardClientProps {
@@ -31,11 +30,6 @@ export function DashboardClient({ items, userEmail, userId }: DashboardClientPro
   const router = useRouter()
   const [modal, setModal] = useState<ModalState>(null)
   const [checkResults, setCheckResults] = useState<Record<string, string>>({})
-  const [isChrome, setIsChrome] = useState(false)
-
-  useEffect(() => {
-    setIsChrome(/Chrome\//.test(navigator.userAgent) && !/Edg\//.test(navigator.userAgent))
-  }, [])
 
   useEffect(() => {
     const supabase = createClient()
@@ -77,16 +71,7 @@ export function DashboardClient({ items, userEmail, userId }: DashboardClientPro
             <Image src="/logo.svg" alt="Peek logo" width={28} height={28} className="dark:invert" />
             <h1 className="text-lg font-semibold tracking-tight">Peek</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-xs text-ink-muted sm:block">{userEmail}</span>
-            {isChrome && <ExtensionPopover />}
-            <ThemeToggle />
-            <form action="/auth/signout" method="POST">
-              <Button type="submit" variant="outline" size="sm">
-                Sign out
-              </Button>
-            </form>
-          </div>
+          <UserMenu userEmail={userEmail} />
         </div>
       </header>
 
