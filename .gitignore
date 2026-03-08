@@ -8,3 +8,4 @@ coverage
 .env
 .env.production
 supabase/.temp
+*.tsbuildinfo
