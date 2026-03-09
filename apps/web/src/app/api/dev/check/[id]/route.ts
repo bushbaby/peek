@@ -13,6 +13,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
   const sendEmail = new URL(request.url).searchParams.get('email') === 'true'
   const { id } = await params
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (!UUID_RE.test(id)) {
+    return NextResponse.json({ error: 'Item not found' }, { status: 404 })
+  }
   const supabase = await createClient()
 
   const {

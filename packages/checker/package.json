@@ -17,7 +17,7 @@
     "@peek/selector": "workspace:*",
     "@xmldom/xmldom": "^0.8.11",
     "cheerio": "^1.0.0",
-    "nodemailer": "^6.10.0",
+    "nodemailer": "^7.0.11",
     "xpath": "^0.0.34"
   },
   "peerDependencies": {

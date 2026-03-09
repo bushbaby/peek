@@ -36,6 +36,18 @@ export async function POST(request: Request) {
     )
   }
 
+  // Per-user rate limiting: max 10 requests per 60 seconds
+  const { count } = await supabase
+    .from('tracked_items')
+    .select('*', { count: 'exact', head: true })
+    .gte('created_at', new Date(Date.now() - 60_000).toISOString())
+  if ((count ?? 0) >= 10) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { ...corsHeaders(), 'Retry-After': '60' } },
+    )
+  }
+
   // Parse and validate body
   let body: unknown
   try {

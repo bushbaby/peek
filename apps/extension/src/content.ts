@@ -370,7 +370,7 @@ function renderPanel() {
           font:12px/1.6 'Menlo','Monaco',monospace;resize:vertical;
           box-sizing:border-box;outline:none;background:${THEME.surface};color:${THEME.inkSoft};
           box-shadow: inset 0 1px 2px rgba(15,23,42,0.04);
-        ">${currentSelector}</textarea>
+        "></textarea>
         <p id="__peek_sel_status__" style="font-size:11px;color:${THEME.inkMuted};margin-top:6px"></p>
       </div>
       <div>
@@ -401,6 +401,9 @@ function renderPanel() {
     "></div>
   `
   shadow.appendChild(panelEl)
+
+  const ta = panelEl.querySelector('#__peek_selector__') as HTMLTextAreaElement | null
+  if (ta) ta.value = currentSelector
 
   // Mode toggle
   panelEl.querySelector('#__peek_mode__')!.addEventListener('click', (e) => {
@@ -451,7 +454,7 @@ function updatePanelPreview() {
   const matches = evaluateSelector(currentSelector)
   const text = matches[0]?.textContent?.trim().slice(0, 500) ?? ''
   const div = panelEl?.querySelector('#__peek_preview__')
-  if (div) div.innerHTML = escapeHtml(text)
+  if (div) div.textContent = text
 }
 
 function updatePanelSelectorStatus(matchCount: number) {

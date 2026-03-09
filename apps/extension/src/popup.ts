@@ -9,7 +9,9 @@ interface AuthStorage {
 
 function decodeEmail(jwt: string): string | null {
   try {
-    const payload = JSON.parse(atob(jwt.split('.')[1]!)) as Record<string, unknown>
+    const parts = jwt.split('.')
+    if (parts.length !== 3) return null
+    const payload = JSON.parse(atob(parts[1]!)) as Record<string, unknown>
     return typeof payload.email === 'string' ? payload.email : null
   } catch {
     return null
@@ -31,13 +33,16 @@ function renderSignedOut(root: HTMLElement) {
 function renderSignedIn(root: HTMLElement, email: string) {
   root.innerHTML = `
     <div class="section-label">Signed in</div>
-    <p class="email">${email}</p>
+    <p class="email"></p>
     <button class="button button-primary" id="btn-pick">Pick element</button>
     <div class="row">
       <button class="button button-secondary" id="btn-dashboard">Dashboard</button>
       <button class="button button-ghost" id="btn-signout">Sign out</button>
     </div>
   `
+
+  const emailEl = root.querySelector('.email') as HTMLElement | null
+  if (emailEl) emailEl.textContent = email
 
   document.getElementById('btn-pick')!.addEventListener('click', async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
