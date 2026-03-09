@@ -20,9 +20,11 @@ A Chrome extension that lets users visually pick any element on any webpage, pre
 ## User Stories
 
 ### US-001: Extension scaffold (Manifest V3, Chrome)
+
 **Description:** As a developer, I need a working Chrome extension skeleton so I have a foundation to build on.
 
 **Acceptance Criteria:**
+
 - [ ] `apps/extension/` package in the monorepo with `manifest.json` (Manifest V3)
 - [ ] Manifest declares `activeTab`, `storage`, and `scripting` permissions
 - [ ] Popup HTML/JS loads without errors in Chrome
@@ -31,9 +33,11 @@ A Chrome extension that lets users visually pick any element on any webpage, pre
 - [ ] Typecheck passes
 
 ### US-002: Login flow in extension popup
+
 **Description:** As a user, I want to log in to Peek from the extension popup so the extension can send items on my behalf.
 
 **Acceptance Criteria:**
+
 - [ ] Popup shows a "Sign in to Peek" button when not authenticated
 - [ ] Clicking it opens `https://peek.bushbaby.dev/auth/extension-callback` in a new tab (user authenticates there via the normal GitHub/Google flow)
 - [ ] Extension manifest declares a content script scoped to `https://peek.bushbaby.dev/auth/extension-callback` that listens for `window.postMessage`
@@ -45,9 +49,11 @@ A Chrome extension that lets users visually pick any element on any webpage, pre
 - [ ] Typecheck passes
 
 ### US-003: Activate element picker from popup
+
 **Description:** As a user, I want to click a button in the extension popup to enter element-pick mode on the current tab.
 
 **Acceptance Criteria:**
+
 - [ ] Popup has an "Pick element" button (disabled if not logged in)
 - [ ] Clicking it closes the popup and injects the picker content script into the active tab
 - [ ] A visible banner/overlay appears at the top of the page indicating pick mode is active
@@ -55,9 +61,11 @@ A Chrome extension that lets users visually pick any element on any webpage, pre
 - [ ] Typecheck passes
 
 ### US-004: Hover highlight and click to select
+
 **Description:** As a user, I want elements to highlight as I move my mouse so I can see what I'm about to select.
 
 **Acceptance Criteria:**
+
 - [ ] Hovering over any element shows a blue highlight outline (not background fill, to avoid layout shift)
 - [ ] The highlight follows the mouse without lag
 - [ ] Clicking an element locks the selection (highlight turns solid/persistent)
@@ -65,9 +73,11 @@ A Chrome extension that lets users visually pick any element on any webpage, pre
 - [ ] Typecheck passes
 
 ### US-005: DOM tree traversal controls
+
 **Description:** As a user, I want to broaden or narrow my selection by moving up or down the DOM tree so I can capture exactly the right amount of content.
 
 **Acceptance Criteria:**
+
 - [ ] After clicking to lock a selection, a small floating toolbar appears near the element with "↑ Parent" and "↓ Child" buttons
 - [ ] "↑ Parent" moves selection up one DOM level and updates the highlight and generated selector
 - [ ] "↓ Child" moves selection down to the first child element (disabled if no child elements)
@@ -75,9 +85,11 @@ A Chrome extension that lets users visually pick any element on any webpage, pre
 - [ ] Typecheck passes
 
 ### US-006: Selector generation and type switching
+
 **Description:** As a user, I want a selector automatically generated for my selected element, and the ability to switch between selector types to match what the Peek worker supports.
 
 **Background:** The Peek worker (`@peek/checker`) recognises three selector formats stored verbatim in the database:
+
 - Plain CSS (default) — e.g. `#price`, `.stock-badge`
 - `xpath=` prefix — e.g. `xpath=//span[@itemprop="price"]`
 - `text=` prefix — e.g. `text=In stock`
@@ -85,6 +97,7 @@ A Chrome extension that lets users visually pick any element on any webpage, pre
 The extension must produce selectors in this same format.
 
 **Acceptance Criteria:**
+
 - [ ] On element lock, a CSS selector is auto-generated (prefer `#id` → unique `.class` combo → `nth-child` path) and shown in the side panel input
 - [ ] A segmented control / pill toggle in the side panel lets the user switch between **CSS**, **XPath**, and **Text** modes
 - [ ] Switching to XPath generates the equivalent XPath expression for the locked element; switching to Text pre-fills with the element's trimmed text content (with `text=` prefix)
@@ -94,9 +107,11 @@ The extension must produce selectors in this same format.
 - [ ] Typecheck passes
 
 ### US-007: Side panel with preview and form
+
 **Description:** As a user, I want a side panel to appear with the captured content preview and a form to configure the tracked item before saving.
 
 **Acceptance Criteria:**
+
 - [ ] A side panel slides in from the right of the page when an element is locked (does not use `chrome.sidePanel` API — inject it as a fixed overlay to avoid MV3 complexity)
 - [ ] Panel shows:
   - CSS / XPath / Text mode toggle (linked to US-006)
@@ -110,9 +125,11 @@ The extension must produce selectors in this same format.
 - [ ] Typecheck passes
 
 ### US-008: Send tracked item to Peek API
+
 **Description:** As a user, I want clicking "Save to Peek" to create the tracked item in my account immediately.
 
 **Acceptance Criteria:**
+
 - [ ] Clicking "Save to Peek" calls `POST https://peek.bushbaby.dev/api/items` with `{ url, selector, label }` and the stored auth token as a Bearer header
 - [ ] On success: panel closes, picker is deactivated, a brief success toast appears on the page ("Added to Peek ✓")
 - [ ] On auth error (401): toast says "Session expired — please sign in again" and clears stored token
@@ -121,9 +138,11 @@ The extension must produce selectors in this same format.
 - [ ] Typecheck passes
 
 ### US-009: Peek web app — POST /api/items endpoint
+
 **Description:** As a developer, I need an authenticated API endpoint in the Peek web app that the extension can call to create tracked items.
 
 **Acceptance Criteria:**
+
 - [ ] `POST /api/items` accepts `{ url: string, selector: string, label?: string }` JSON body
 - [ ] Request must include a valid Supabase Bearer token in the `Authorization` header
 - [ ] Returns `201` with the created item on success

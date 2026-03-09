@@ -4,7 +4,14 @@ import { useTransition, useState, useEffect, useRef } from 'react'
 import type { TrackedItem } from '@peek/db'
 import { addTrackedItemAction, updateTrackedItemAction } from '@/app/dashboard/actions'
 import { Button } from './ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from './ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from './ui/dialog'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 
@@ -72,14 +79,24 @@ export function AddEditModal({ item, onClose }: AddEditModalProps) {
               defaultValue={item?.selector}
               placeholder='#price or [data-testid="stock"]'
             />
-            <p className="text-xs text-muted-foreground">
-              CSS (default), <code className="font-mono">xpath=//span[@class=&quot;price&quot;]</code>, or <code className="font-mono">text=In stock</code>.{' '}
-              Prefer <code className="font-mono">#id</code> or <code className="font-mono">[data-testid=&quot;…&quot;]</code>.
-            </p>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <p>
+                We render the page (JS-enabled) and extract this selector. Prefer stable IDs or{' '}
+                <code className="font-mono">[data-testid]</code>.
+              </p>
+              <p>
+                Examples: <code className="font-mono">#price</code>,{' '}
+                <code className="font-mono">[data-testid=&quot;stock&quot;]</code>,{' '}
+                <code className="font-mono">text=In stock</code>,{' '}
+                <code className="font-mono">xpath=//span[@class=&quot;price&quot;]</code>.
+              </p>
+            </div>
           </div>
 
           {error && (
-            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {error}
+            </p>
           )}
         </form>
 

@@ -1,11 +1,7 @@
 'use client'
 
 import { DownloadIcon, PuzzleIcon } from 'lucide-react'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from './ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
 export function ExtensionPopover() {
   return (
@@ -18,7 +14,8 @@ export function ExtensionPopover() {
       <PopoverContent side="bottom" align="end" className="w-80 p-4 text-sm">
         <p className="font-semibold text-ink mb-1">Install the Peek extension</p>
         <p className="text-xs text-ink-muted mb-4">
-          Chrome only. This is an unofficial build — Chrome will show a developer mode warning, that&apos;s expected.
+          Chrome only. This is an unofficial build — Chrome will show a developer mode warning,
+          that&apos;s expected.
         </p>
 
         <a
@@ -32,23 +29,36 @@ export function ExtensionPopover() {
 
         <ol className="space-y-2 text-xs text-ink-soft list-none">
           <li className="flex gap-2.5">
-            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">1</span>
+            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">
+              1
+            </span>
             <span>Unzip the downloaded file</span>
           </li>
           <li className="flex gap-2.5">
-            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">2</span>
+            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">
+              2
+            </span>
             <span>
               Open{' '}
               <code className="bg-ghost rounded px-1 text-ink font-mono">chrome://extensions</code>
             </span>
           </li>
           <li className="flex gap-2.5">
-            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">3</span>
-            <span>Enable <strong>Developer mode</strong> (toggle, top-right)</span>
+            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">
+              3
+            </span>
+            <span>
+              Enable <strong>Developer mode</strong> (toggle, top-right)
+            </span>
           </li>
           <li className="flex gap-2.5">
-            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">4</span>
-            <span>Click <strong>Load unpacked</strong> and select the <code className="bg-ghost rounded px-1 text-ink font-mono">dist</code> folder</span>
+            <span className="flex-none w-4 h-4 rounded-full bg-line text-ink text-[10px] font-bold flex items-center justify-center">
+              4
+            </span>
+            <span>
+              Click <strong>Load unpacked</strong> and select the{' '}
+              <code className="bg-ghost rounded px-1 text-ink font-mono">dist</code> folder
+            </span>
           </li>
         </ol>
       </PopoverContent>

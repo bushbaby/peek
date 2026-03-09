@@ -13,6 +13,7 @@ These two tasks touch existing code and can ship independently of the extension 
 **Why first:** Everything downstream (worker and extension) imports from it. Doing it first means no logic is duplicated and the type contract is locked in.
 
 **Files:**
+
 - Create `packages/selector/package.json`, `tsconfig.json`, `tsup.config.ts`
 - Create `packages/selector/src/index.ts` — move `parseSelectorType()` + `SelectorType` type from `packages/checker/src/fetch.ts` here; add `generateXPath(el: Element): string` and `generateCssSelector(el: Element): string` stubs (used later by the content script)
 - Update `packages/checker/src/fetch.ts` to import from `@peek/selector` instead of defining locally
@@ -24,6 +25,7 @@ These two tasks touch existing code and can ship independently of the extension 
 **Why now:** Needed before the extension can save anything. Build and test it in isolation using `curl` before the extension exists.
 
 **Files:**
+
 - `apps/web/src/app/api/items/route.ts` — `POST` handler:
   - Reads `Authorization: Bearer <token>` header
   - Calls `supabase.auth.getUser(token)` to validate
@@ -36,6 +38,7 @@ These two tasks touch existing code and can ship independently of the extension 
 **Why now:** The extension auth flow (Step 6) depends on this page existing.
 
 **Files:**
+
 - `apps/web/src/app/auth/extension-callback/page.tsx` — client component:
   - On mount: reads Supabase session via `supabase.auth.getSession()`
   - Calls `window.postMessage({ type: 'PEEK_TOKEN', accessToken, refreshToken }, '*')`
@@ -50,6 +53,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 4 · `apps/extension/` package skeleton
 
 **Files:**
+
 - `apps/extension/package.json` — name `@peek/extension`, scripts: `dev`, `build`
 - `apps/extension/manifest.json` (MV3):
   ```json
@@ -59,10 +63,12 @@ These two tasks touch existing code and can ship independently of the extension 
     "permissions": ["activeTab", "storage", "scripting"],
     "background": { "service_worker": "dist/background.js" },
     "action": { "default_popup": "popup.html" },
-    "content_scripts": [{
-      "matches": ["https://peek.bushbaby.dev/auth/extension-callback"],
-      "js": ["dist/auth-relay.js"]
-    }]
+    "content_scripts": [
+      {
+        "matches": ["https://peek.bushbaby.dev/auth/extension-callback"],
+        "js": ["dist/auth-relay.js"]
+      }
+    ]
   }
   ```
 - `apps/extension/vite.config.ts` — multi-entry build: `popup`, `background`, `content` (picker), `auth-relay`
@@ -79,6 +85,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 5 · Token storage in background service worker
 
 **Files:**
+
 - `apps/extension/src/background.ts`:
   - `chrome.runtime.onMessage` listener: handles `STORE_TOKEN` message → saves `accessToken` + `refreshToken` to `chrome.storage.local`
   - Handles `GET_AUTH` message → returns stored tokens (or null)
@@ -87,6 +94,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 6 · Auth relay content script
 
 **Files:**
+
 - `apps/extension/src/auth-relay.ts`:
   - Listens for `window.postMessage` where `event.data.type === 'PEEK_TOKEN'`
   - Validates origin is `https://peek.bushbaby.dev`
@@ -95,6 +103,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 7 · Popup login / logout UI
 
 **Files:**
+
 - `apps/extension/popup.html` + `apps/extension/src/popup.ts`:
   - On load: sends `GET_AUTH` to background; renders logged-in or logged-out state
   - **Logged out:** "Sign in to Peek" button → opens `https://peek.bushbaby.dev/auth/extension-callback` in new tab via `chrome.tabs.create`
@@ -108,6 +117,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 8 · Hover highlight
 
 **Files:**
+
 - `apps/extension/src/content.ts`:
   - Injected via `chrome.scripting.executeScript` from the popup "Pick element" button
   - Creates a Shadow DOM host `<div>` appended to `document.body` for isolated UI
@@ -118,6 +128,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 9 · Click to lock + DOM traversal toolbar
 
 **Files:**
+
 - `apps/extension/src/content.ts` (continued):
   - On click: stores the `lockedElement`, stops hover tracking, freezes highlight outline
   - Renders a small floating toolbar near the element (in the Shadow DOM host):
@@ -133,6 +144,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 10 · CSS selector generation
 
 **Files:**
+
 - `packages/selector/src/index.ts` — implement `generateCssSelector(el: Element): string`:
   - Try `#id` first (if unique in document)
   - Try unique class combination
@@ -143,6 +155,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 11 · XPath generation
 
 **Files:**
+
 - `packages/selector/src/index.ts` — implement `generateXPath(el: Element): string`:
   - Builds absolute XPath: `/html/body/div[2]/span[1]` etc.
   - Must satisfy `document.evaluate(result, document, ...).iterateNext() === el`
@@ -151,6 +164,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 12 · Selector mode switching in content script
 
 **Files:**
+
 - `apps/extension/src/content.ts`:
   - When element is locked, generate both CSS and XPath for it; store element's `textContent.trim()` for Text= mode
   - Mode toggle (CSS / XPath / Text) in the side panel (Phase 6) drives which value is shown
@@ -163,6 +177,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 13 · Side panel UI
 
 **Files:**
+
 - `apps/extension/src/panel.ts` + inline HTML string rendered into the Shadow DOM:
   - CSS / XPath / Text pill toggle
   - Editable `<textarea>` for selector — live re-evaluation updates highlight (debounced 300ms)
@@ -181,6 +196,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 14 · Send to Peek API
 
 **Files:**
+
 - `apps/extension/src/panel.ts`:
   - On "Save to Peek": send `GET_AUTH` to background → use `accessToken` as Bearer
   - `POST https://peek.bushbaby.dev/api/items` with `{ url, selector, label }`
@@ -192,6 +208,7 @@ These two tasks touch existing code and can ship independently of the extension 
 ### Step 15 · End-to-end smoke test
 
 Manual checklist before considering the extension shippable:
+
 - [ ] Sign in from popup, tab closes, popup shows email
 - [ ] On a real webpage, click "Pick element", hover highlights elements
 - [ ] Click to lock, toolbar appears with correct tag badge

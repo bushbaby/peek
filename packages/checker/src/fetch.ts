@@ -9,9 +9,7 @@ export interface FetchOptions {
   headed?: boolean
 }
 
-export type FetchResult =
-  | { html: string; method: 'playwright' | 'static' }
-  | { error: string }
+export type FetchResult = { html: string; method: 'playwright' | 'static' } | { error: string }
 
 /**
  * Fetch a page and extract the innerHTML of the first matching element.

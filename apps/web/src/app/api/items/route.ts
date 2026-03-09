@@ -9,7 +9,10 @@ export async function POST(request: Request) {
   const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
 
   if (!token) {
-    return NextResponse.json({ error: 'Missing authorization token' }, { status: 401, headers: corsHeaders() })
+    return NextResponse.json(
+      { error: 'Missing authorization token' },
+      { status: 401, headers: corsHeaders() },
+    )
   }
 
   // Build a Supabase client that uses the token directly (not cookies)
@@ -22,9 +25,15 @@ export async function POST(request: Request) {
     },
   )
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
   if (authError || !user) {
-    return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401, headers: corsHeaders() })
+    return NextResponse.json(
+      { error: 'Invalid or expired token' },
+      { status: 401, headers: corsHeaders() },
+    )
   }
 
   // Parse and validate body
@@ -32,16 +41,25 @@ export async function POST(request: Request) {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400, headers: corsHeaders() })
+    return NextResponse.json(
+      { error: 'Invalid JSON body' },
+      { status: 400, headers: corsHeaders() },
+    )
   }
 
   const { url, selector } = body as Record<string, unknown>
 
   if (typeof url !== 'string' || !url.trim()) {
-    return NextResponse.json({ error: 'url is required', field: 'url' }, { status: 422, headers: corsHeaders() })
+    return NextResponse.json(
+      { error: 'url is required', field: 'url' },
+      { status: 422, headers: corsHeaders() },
+    )
   }
   if (typeof selector !== 'string' || !selector.trim()) {
-    return NextResponse.json({ error: 'selector is required', field: 'selector' }, { status: 422, headers: corsHeaders() })
+    return NextResponse.json(
+      { error: 'selector is required', field: 'selector' },
+      { status: 422, headers: corsHeaders() },
+    )
   }
 
   try {

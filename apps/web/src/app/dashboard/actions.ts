@@ -2,12 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import {
-  insertTrackedItem,
-  updateTrackedItem,
-  deleteTrackedItem,
-  setPaused,
-} from '@peek/db'
+import { insertTrackedItem, updateTrackedItem, deleteTrackedItem, setPaused } from '@peek/db'
 import { isValidSelector, validateUrl } from '@peek/checker'
 
 async function getAuthenticatedClient() {

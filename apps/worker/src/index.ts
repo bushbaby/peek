@@ -1,10 +1,11 @@
+import { createServiceRoleClient, getTrackedItems, updateSnapshot, getUserEmail } from '@peek/db'
 import {
-  createServiceRoleClient,
-  getTrackedItems,
-  updateSnapshot,
-  getUserEmail,
-} from '@peek/db'
-import { fetchPage, computeSnapshot, sendNotification, sendErrorNotification, decideNotification } from '@peek/checker'
+  fetchPage,
+  computeSnapshot,
+  sendNotification,
+  sendErrorNotification,
+  decideNotification,
+} from '@peek/checker'
 import type { SmtpConfig } from '@peek/checker'
 
 function getSmtpConfig(): SmtpConfig {
@@ -59,7 +60,9 @@ async function main() {
       }
 
       const snapshot = computeSnapshot(result.html)
-      const decision = decideNotification(item.last_status, item.last_snapshot_hash, { newHash: snapshot.hash })
+      const decision = decideNotification(item.last_status, item.last_snapshot_hash, {
+        newHash: snapshot.hash,
+      })
       const changed = decision.kind === 'changed'
 
       if (changed) {

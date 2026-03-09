@@ -4,7 +4,10 @@ import type { Provider } from '@supabase/supabase-js'
 
 const ALLOWED_PROVIDERS: Provider[] = ['github', 'google']
 
-export async function POST(request: Request, { params }: { params: Promise<{ provider: string }> }) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ provider: string }> },
+) {
   const { provider } = await params
 
   if (!ALLOWED_PROVIDERS.includes(provider as Provider)) {

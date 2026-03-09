@@ -13,18 +13,20 @@ export interface Snapshot {
  * - Whitespace variations (indentation, line endings)
  */
 function normalizeHtml(html: string): string {
-  return html
-    .replace(/<!--[\s\S]*?-->/g, '')            // HTML comments
-    .replace(/<script[\s\S]*?<\/script>/gi, '') // inline scripts
-    .replace(/<style[\s\S]*?<\/style>/gi, '')   // inline styles
-    // Normalize <time> elements: keep the stable datetime attribute, strip the
-    // display text ("46 min. geleden", "2 days ago") which changes every check.
-    .replace(/<time([^>]*)>[\s\S]*?<\/time>/gi, (_, attrs: string) => {
-      const dt = attrs.match(/datetime="([^"]*)"/)
-      return dt ? `<time datetime="${dt[1]}"></time>` : '<time></time>'
-    })
-    .replace(/\s+/g, ' ')                       // collapse whitespace
-    .trim()
+  return (
+    html
+      .replace(/<!--[\s\S]*?-->/g, '') // HTML comments
+      .replace(/<script[\s\S]*?<\/script>/gi, '') // inline scripts
+      .replace(/<style[\s\S]*?<\/style>/gi, '') // inline styles
+      // Normalize <time> elements: keep the stable datetime attribute, strip the
+      // display text ("46 min. geleden", "2 days ago") which changes every check.
+      .replace(/<time([^>]*)>[\s\S]*?<\/time>/gi, (_, attrs: string) => {
+        const dt = attrs.match(/datetime="([^"]*)"/)
+        return dt ? `<time datetime="${dt[1]}"></time>` : '<time></time>'
+      })
+      .replace(/\s+/g, ' ') // collapse whitespace
+      .trim()
+  )
 }
 
 /**

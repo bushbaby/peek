@@ -18,8 +18,9 @@ function decodeEmail(jwt: string): string | null {
 
 function renderSignedOut(root: HTMLElement) {
   root.innerHTML = `
-    <button id="btn-signin">Sign in to Peek</button>
-    <p class="notice">You'll be redirected to Peek to authenticate.</p>
+    <div class="section-label">Welcome</div>
+    <button class="button button-primary" id="btn-signin">Sign in to Peek</button>
+    <p class="notice">You'll open Peek to authenticate, then return here.</p>
   `
   document.getElementById('btn-signin')!.addEventListener('click', () => {
     void chrome.tabs.create({ url: `${PEEK_URL}/auth/extension-callback` })
@@ -29,10 +30,13 @@ function renderSignedOut(root: HTMLElement) {
 
 function renderSignedIn(root: HTMLElement, email: string) {
   root.innerHTML = `
+    <div class="section-label">Signed in</div>
     <p class="email">${email}</p>
-    <button id="btn-pick">Pick element</button>
-    <button id="btn-dashboard">Open dashboard</button>
-    <button id="btn-signout">Sign out</button>
+    <button class="button button-primary" id="btn-pick">Pick element</button>
+    <div class="row">
+      <button class="button button-secondary" id="btn-dashboard">Dashboard</button>
+      <button class="button button-ghost" id="btn-signout">Sign out</button>
+    </div>
   `
 
   document.getElementById('btn-pick')!.addEventListener('click', async () => {
@@ -67,7 +71,7 @@ function renderSignedIn(root: HTMLElement, email: string) {
 
 async function init() {
   const root = document.getElementById('root')!
-  const auth = await chrome.runtime.sendMessage({ type: 'GET_AUTH' }) as AuthStorage
+  const auth = (await chrome.runtime.sendMessage({ type: 'GET_AUTH' })) as AuthStorage
 
   if (auth.accessToken) {
     const email = decodeEmail(auth.accessToken) ?? 'Signed in'

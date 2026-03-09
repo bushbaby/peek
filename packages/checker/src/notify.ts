@@ -26,9 +26,7 @@ export function decideNotification(
     if (status === 'selector_missing') {
       // Only notify when selector disappears from a "found" state
       const wasFound = lastStatus === 'ok' || lastStatus === 'changed'
-      return wasFound
-        ? { kind: 'error', status, message: result.error }
-        : { kind: 'none' }
+      return wasFound ? { kind: 'error', status, message: result.error } : { kind: 'none' }
     }
 
     // Technical error: notify on first occurrence only

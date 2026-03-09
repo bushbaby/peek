@@ -41,7 +41,8 @@ export function DeleteConfirmDialog({ id, url, onClose }: DeleteConfirmDialogPro
         <AlertDialogHeader>
           <AlertDialogTitle>Remove tracked item?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the tracked item and its snapshot data.
+            This will permanently delete the tracked item and its snapshot data. Emails will stop
+            for this URL.
           </AlertDialogDescription>
         </AlertDialogHeader>
 

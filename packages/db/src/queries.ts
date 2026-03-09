@@ -12,15 +12,8 @@ export async function getAllTrackedItems(client: SupabaseClient): Promise<Tracke
   return data ?? []
 }
 
-export async function getTrackedItemById(
-  client: SupabaseClient,
-  id: string,
-): Promise<TrackedItem> {
-  const { data, error } = await client
-    .from('tracked_items')
-    .select('*')
-    .eq('id', id)
-    .single()
+export async function getTrackedItemById(client: SupabaseClient, id: string): Promise<TrackedItem> {
+  const { data, error } = await client.from('tracked_items').select('*').eq('id', id).single()
   if (error) throw error
   return data
 }
@@ -29,11 +22,7 @@ export async function insertTrackedItem(
   client: SupabaseClient,
   data: { url: string; selector: string; user_id: string },
 ): Promise<TrackedItem> {
-  const { data: item, error } = await client
-    .from('tracked_items')
-    .insert(data)
-    .select()
-    .single()
+  const { data: item, error } = await client.from('tracked_items').insert(data).select().single()
   if (error) throw error
   return item
 }
@@ -63,10 +52,7 @@ export async function setPaused(
   id: string,
   isPaused: boolean,
 ): Promise<void> {
-  const { error } = await client
-    .from('tracked_items')
-    .update({ is_paused: isPaused })
-    .eq('id', id)
+  const { error } = await client.from('tracked_items').update({ is_paused: isPaused }).eq('id', id)
   if (error) throw error
 }
 

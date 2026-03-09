@@ -5,6 +5,7 @@
 **Pattern:** Layered architecture with clear domain/infrastructure separation, split across pnpm workspace packages.
 
 **Package boundaries mirror the domain:**
+
 - `@peek/db` — infrastructure: Supabase client, typed queries, shared types
 - `@peek/checker` — domain services: page fetching, diffing, email notification
 - `apps/web` — presentation + application: Next.js UI and local-dev API
@@ -115,8 +116,8 @@ export interface TrackedItem {
 }
 
 export interface Snapshot {
-  hash: string       // SHA-256 of normalised innerHTML
-  snippet: string    // first ~200 chars of text content, sanitised
+  hash: string // SHA-256 of normalised innerHTML
+  snippet: string // first ~200 chars of text content, sanitised
 }
 
 export interface CheckResult {
@@ -178,6 +179,7 @@ create trigger tracked_items_updated_at
 ### `@peek/tsconfig`
 
 No build step. Provides:
+
 - `base.json` — strict TS, ESNext, bundler resolution
 - `nextjs.json` — extends base, adds JSX, DOM libs
 
@@ -234,7 +236,7 @@ Entry: `src/index.ts`. No HTTP server — plain Node script.
 ```typescript
 // Orchestration loop (pseudo):
 const supabase = createSupabaseClient({ serviceRole: true })
-const items = await getTrackedItems(supabase)         // non-paused only
+const items = await getTrackedItems(supabase) // non-paused only
 
 for (const item of items) {
   const fetchResult = await fetchPage(item.url, item.selector)
@@ -248,7 +250,7 @@ for (const item of items) {
 
   await updateSnapshot(supabase, item.id, {
     status: changed ? 'changed' : 'ok',
-    snapshot: changed ? snapshot : undefined
+    snapshot: changed ? snapshot : undefined,
   })
 }
 ```
@@ -310,8 +312,8 @@ Build order: `@peek/tsconfig` (no build) → `@peek/db` → `@peek/checker` → 
 name: Scheduled Check
 on:
   schedule:
-    - cron: '0 */6 * * *'   # 4x/day at 00:00, 06:00, 12:00, 18:00 UTC
-  workflow_dispatch:          # manual trigger for testing
+    - cron: '0 */6 * * *' # 4x/day at 00:00, 06:00, 12:00, 18:00 UTC
+  workflow_dispatch: # manual trigger for testing
 
 jobs:
   check:
@@ -363,23 +365,26 @@ jobs:
 ## Environment Variables
 
 ### Vercel (production + preview)
-| Variable | Location | Notes |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | public | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | public | Anon key for client-side |
-| `SUPABASE_SERVICE_ROLE_KEY` | server-only | Never exposed to client |
+
+| Variable                        | Location    | Notes                    |
+| ------------------------------- | ----------- | ------------------------ |
+| `NEXT_PUBLIC_SUPABASE_URL`      | public      | Supabase project URL     |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | public      | Anon key for client-side |
+| `SUPABASE_SERVICE_ROLE_KEY`     | server-only | Never exposed to client  |
 
 ### GitHub Actions Secrets
-| Secret | Notes |
-|---|---|
-| `SUPABASE_URL` | Same project URL |
+
+| Secret                      | Notes                   |
+| --------------------------- | ----------------------- |
+| `SUPABASE_URL`              | Same project URL        |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role for worker |
-| `SMTP_HOST` | e.g., smtp.resend.com |
-| `SMTP_PORT` | 465 or 587 |
-| `SMTP_USER` | SMTP username |
-| `SMTP_PASS` | SMTP password / API key |
+| `SMTP_HOST`                 | e.g., smtp.resend.com   |
+| `SMTP_PORT`                 | 465 or 587              |
+| `SMTP_USER`                 | SMTP username           |
+| `SMTP_PASS`                 | SMTP password / API key |
 
 ### Local Dev (`.env.local` in `apps/web`)
+
 All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 
 ---
@@ -387,6 +392,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 ## Implementation Phases
 
 ### Phase 0 — Monorepo Scaffold
+
 - [ ] Init pnpm workspace (`pnpm-workspace.yaml`)
 - [ ] Create `packages/tsconfig` with `base.json` and `nextjs.json`
 - [ ] Create `apps/web` via `pnpm create next-app`; wire tsconfig
@@ -397,6 +403,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 - [ ] Add `.env.example`
 
 ### Phase 1 — Database + Auth
+
 - [ ] Create Supabase project; apply `001_tracked_items.sql` migration
 - [ ] Enable GitHub OAuth provider in Supabase dashboard
 - [ ] Set `SITE_URL` and OAuth redirect to `peek.bushbaby.dev` (+ localhost for dev)
@@ -408,6 +415,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 - [ ] Verify: sign-in → redirect to dashboard, sign-out → redirect to homepage
 
 ### Phase 2 — CRUD UI
+
 - [ ] Implement `@peek/db`: `queries.ts` (insert, update, delete, setPaused, getAllTrackedItems)
 - [ ] Build `TrackedItemList` with loading + empty states
 - [ ] Build `AddEditModal` (URL + CSS selector inputs, validation)
@@ -420,6 +428,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 - [ ] Verify: all CRUD flows in browser
 
 ### Phase 3 — Checker Core
+
 - [ ] Implement `packages/checker/src/snapshot.ts`: SHA-256 hash + 200-char snippet
 - [ ] Implement `packages/checker/src/fetch.ts`: Playwright fetch (block assets, 15s timeout)
 - [ ] Add static fetch fallback (cheerio) when Playwright throws
@@ -428,6 +437,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 - [ ] Unit tests: hash stability, changed detection, SSRF guard, fallback trigger
 
 ### Phase 4 — Worker + Scheduled Checks
+
 - [ ] Implement `apps/worker/src/index.ts`: orchestration loop
 - [ ] Implement `@peek/db`: `getTrackedItems` (non-paused only), `updateSnapshot`, `getUserEmail`
 - [ ] Handle per-item errors: catch, write error status, continue loop
@@ -436,6 +446,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 - [ ] Verify: trigger workflow manually → Supabase rows updated
 
 ### Phase 5 — Email Notifications
+
 - [ ] Implement `packages/checker/src/email.ts` with nodemailer
 - [ ] Email template: URL, selector, timestamp, old hash → new hash, snippet
 - [ ] Wire into worker: send only on `hasChanged()`; lookup user email from `auth.users`
@@ -443,6 +454,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 - [ ] Verify: change detected → email arrives at GitHub account email
 
 ### Phase 6 — Local Dev Check Route
+
 - [ ] Implement `apps/web/src/app/api/dev/check/[id]/route.ts`
 - [ ] Gate with `if (process.env.NODE_ENV === 'production') return 404`
 - [ ] Show "Check now" button in `TrackedItemRow` only when `NODE_ENV !== 'production'`
@@ -450,6 +462,7 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 - [ ] Verify: works locally; confirm button absent in Vercel preview
 
 ### Phase 7 — CI, Testing, Polish
+
 - [ ] Add `ci.yml`: typecheck + lint + test on push/PR
 - [ ] Integration tests for CRUD API routes
 - [ ] Unit tests for `@peek/checker` snapshot and fetch fallback
@@ -463,11 +476,11 @@ All of the above plus optionally `BROWSERLESS_TOKEN` for hosted Playwright.
 
 ## Key Trade-offs
 
-| Decision | Choice | Reason |
-|---|---|---|
-| Playwright location | GitHub Actions only | Avoids Vercel 10s limit; free CI minutes |
-| Email trigger | Worker (GH Actions) | Email is computed where check result is known |
-| Manual check | Local dev only | Eliminates Playwright on Vercel entirely |
-| Package for checker | Separate `@peek/checker` | Worker and local dev route share identical pipeline |
-| RLS strategy | `auth.uid() = user_id` | Zero-config row isolation; no separate ACL table |
-| Snapshot storage | Hash + 200-char snippet | Lightweight; avoids storing full HTML; actionable emails |
+| Decision            | Choice                   | Reason                                                   |
+| ------------------- | ------------------------ | -------------------------------------------------------- |
+| Playwright location | GitHub Actions only      | Avoids Vercel 10s limit; free CI minutes                 |
+| Email trigger       | Worker (GH Actions)      | Email is computed where check result is known            |
+| Manual check        | Local dev only           | Eliminates Playwright on Vercel entirely                 |
+| Package for checker | Separate `@peek/checker` | Worker and local dev route share identical pipeline      |
+| RLS strategy        | `auth.uid() = user_id`   | Zero-config row isolation; no separate ACL table         |
+| Snapshot storage    | Hash + 200-char snippet  | Lightweight; avoids storing full HTML; actionable emails |

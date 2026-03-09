@@ -6,10 +6,7 @@ import { fetchPage, computeSnapshot, hasChanged, sendNotification } from '@peek/
 // This route is intentionally excluded from production use.
 // It exists solely for local development testing of the checker pipeline.
 // Add ?email=true to also send the notification email (tests SMTP config).
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }

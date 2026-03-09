@@ -32,6 +32,20 @@ let highlightEl: HTMLElement | null = null
 let panelEl: HTMLElement | null = null
 let toolbarEl: HTMLElement | null = null
 
+// Light theme tokens to mirror the web app
+const THEME = {
+  canvas: '#F8FAFC',
+  surface: '#FFFFFF',
+  ghost: '#F1F5F9',
+  line: 'rgba(15,23,42,0.12)',
+  lineSubtle: 'rgba(15,23,42,0.08)',
+  ink: '#0F172A',
+  inkSoft: '#1E293B',
+  inkMuted: '#475569',
+  accent: '#22C55E',
+  accentHover: '#16A34A',
+}
+
 // ─── Private network guard ────────────────────────────────────────────────────
 
 const PRIVATE_PATTERNS = [
@@ -61,7 +75,8 @@ function init() {
 
   shadowHost = document.createElement('div')
   shadowHost.id = '__peek_host__'
-  shadowHost.style.cssText = 'all: initial; position: fixed; inset: 0; pointer-events: none; z-index: 2147483647;'
+  shadowHost.style.cssText =
+    'all: initial; position: fixed; inset: 0; pointer-events: none; z-index: 2147483647;'
   document.body.appendChild(shadowHost)
   shadow = shadowHost.attachShadow({ mode: 'open' })
 
@@ -69,8 +84,8 @@ function init() {
   highlightEl = document.createElement('div')
   highlightEl.style.cssText = `
     position: fixed; pointer-events: none; z-index: 2147483646;
-    outline: 2px solid #3b82f6; outline-offset: 1px;
-    background: rgba(59,130,246,0.08); border-radius: 2px;
+    outline: 2px solid ${THEME.accent}; outline-offset: 1px;
+    background: rgba(34,197,94,0.08); border-radius: 3px;
     transition: top 0.05s, left 0.05s, width 0.05s, height 0.05s;
   `
   shadow.appendChild(highlightEl)
@@ -79,10 +94,11 @@ function init() {
   const banner = document.createElement('div')
   banner.style.cssText = `
     position: fixed; top: 0; left: 0; right: 0; pointer-events: auto;
-    background: #111; color: #fff; font: 500 12px/1 -apple-system, sans-serif;
-    padding: 7px 12px; display: flex; align-items: center; gap: 8px; z-index: 2147483647;
+    background: ${THEME.ink}; color: ${THEME.surface}; font: 600 12px/1.4 'Inter', -apple-system, system-ui, sans-serif;
+    padding: 8px 12px; display: flex; align-items: center; gap: 10px; z-index: 2147483647;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
   `
-  banner.innerHTML = `<span>Peek — click any element to select it</span><span style="margin-left:auto;opacity:.6;font-size:11px">Esc to cancel</span>`
+  banner.innerHTML = `<span style="letter-spacing:0.02em">Peek — click any element to select it</span><span style="margin-left:auto;opacity:.75;font-size:11px">Esc to cancel</span>`
   shadow.appendChild(banner)
 
   document.addEventListener('mousemove', onMouseMove, true)
@@ -96,15 +112,16 @@ function init() {
 function showPrivateNetworkMessage() {
   shadowHost = document.createElement('div')
   shadowHost.id = '__peek_host__'
-  shadowHost.style.cssText = 'all: initial; position: fixed; inset: 0; pointer-events: none; z-index: 2147483647;'
+  shadowHost.style.cssText =
+    'all: initial; position: fixed; inset: 0; pointer-events: none; z-index: 2147483647;'
   document.body.appendChild(shadowHost)
   shadow = shadowHost.attachShadow({ mode: 'open' })
 
   const banner = document.createElement('div')
   banner.style.cssText = `
     position: fixed; top: 0; left: 0; right: 0; pointer-events: auto;
-    background: #7f1d1d; color: #fff; font: 500 12px/1 -apple-system, sans-serif;
-    padding: 7px 12px; display: flex; align-items: center; gap: 8px; z-index: 2147483647;
+    background: #7f1d1d; color: ${THEME.surface}; font: 600 12px/1.4 'Inter', -apple-system, system-ui, sans-serif;
+    padding: 8px 12px; display: flex; align-items: center; gap: 10px; z-index: 2147483647;
   `
   banner.innerHTML = `
     <span>Peek can't track pages on private networks (${escapeHtml(window.location.hostname)})</span>
@@ -155,7 +172,10 @@ function onClick(e: MouseEvent) {
 }
 
 function onKeyDown(e: KeyboardEvent) {
-  if (e.key === 'Escape') { suppressEvent(e); cleanup() }
+  if (e.key === 'Escape') {
+    suppressEvent(e)
+    cleanup()
+  }
 }
 
 function suppressEvent(e: Event) {
@@ -189,8 +209,8 @@ function lockElement(el: Element) {
   currentSelector = generateCssSelector(el)
 
   if (highlightEl) {
-    highlightEl.style.outline = '2px solid #10b981'
-    highlightEl.style.background = 'rgba(16,185,129,0.08)'
+    highlightEl.style.outline = `2px solid ${THEME.accent}`
+    highlightEl.style.background = 'rgba(34,197,94,0.10)'
   }
 
   renderToolbar(el)
@@ -207,15 +227,16 @@ function renderToolbar(el: Element) {
   toolbarEl = document.createElement('div')
   toolbarEl.style.cssText = `
     position: fixed; pointer-events: auto; z-index: 2147483647;
-    background: #111; color: #fff; border-radius: 6px;
-    font: 12px/1 -apple-system, sans-serif;
-    display: flex; align-items: center; gap: 4px; padding: 5px 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    background: ${THEME.ink}; color: ${THEME.surface}; border-radius: 8px;
+    font: 12px/1.2 'Inter', -apple-system, system-ui, sans-serif;
+    display: flex; align-items: center; gap: 4px; padding: 6px 9px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    border: 1px solid ${THEME.line};
   `
   toolbarEl.innerHTML = `
-    <button id="__peek_up__" style="background:transparent;border:none;color:#fff;cursor:pointer;padding:2px 6px;border-radius:4px;font-size:12px">↑</button>
-    <span style="opacity:.5;font-size:10px">${tag}${hint}</span>
-    <button id="__peek_down__" style="background:transparent;border:none;color:#fff;cursor:pointer;padding:2px 6px;border-radius:4px;font-size:12px">↓</button>
+    <button id="__peek_up__" style="background:${THEME.surface};border:1px solid ${THEME.line};color:${THEME.ink};cursor:pointer;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.08)">↑</button>
+    <span style="opacity:.75;font-size:11px;color:${THEME.surface}">${tag}${hint}</span>
+    <button id="__peek_down__" style="background:${THEME.surface};border:1px solid ${THEME.line};color:${THEME.ink};cursor:pointer;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.08)">↓</button>
   `
   shadow.appendChild(toolbarEl)
   positionToolbar(el)
@@ -270,7 +291,13 @@ function evaluateSelector(selector: string): Element[] {
   try {
     if (type === 'css') return Array.from(document.querySelectorAll(value))
     if (type === 'xpath') {
-      const result = document.evaluate(value, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+      const result = document.evaluate(
+        value,
+        document,
+        null,
+        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+        null,
+      )
       const els: Element[] = []
       for (let i = 0; i < result.snapshotLength; i++) {
         const n = result.snapshotItem(i)
@@ -279,11 +306,13 @@ function evaluateSelector(selector: string): Element[] {
       return els
     }
     if (type === 'text') {
-      return Array.from(document.querySelectorAll('*')).filter(
-        (el) => el.textContent?.trim().includes(value),
+      return Array.from(document.querySelectorAll('*')).filter((el) =>
+        el.textContent?.trim().includes(value),
       )
     }
-  } catch { /* invalid selector */ }
+  } catch {
+    /* invalid selector */
+  }
   return []
 }
 
@@ -298,65 +327,77 @@ function renderPanel() {
   panelEl = document.createElement('div')
   panelEl.style.cssText = `
     position: fixed; top: 0; right: 0; bottom: 0; width: 320px;
-    background: #fff; border-left: 1px solid #e5e7eb;
-    font: 13px/1.5 -apple-system, sans-serif; color: #111;
+    background: ${THEME.surface}; border-left: 1px solid ${THEME.line};
+    font: 13px/1.6 'Inter', -apple-system, system-ui, sans-serif; color: ${THEME.ink};
     display: flex; flex-direction: column; z-index: 2147483647;
     pointer-events: auto; overflow: hidden;
-    box-shadow: -2px 0 12px rgba(0,0,0,.08);
+    box-shadow: -6px 0 28px rgba(15,23,42,0.14);
   `
+  const logoSrc = chrome.runtime.getURL('icons/icon48.png')
   panelEl.innerHTML = `
-    <div style="padding:14px 14px 12px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:8px">
-      <strong style="font-size:14px">Peek</strong>
-      <button id="__peek_cancel__" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#6b7280;font-size:18px;line-height:1">×</button>
+    <div style="padding:14px 14px 12px;border-bottom:1px solid ${THEME.line};display:flex;align-items:center;gap:10px;background:${THEME.surface};position:sticky;top:0;z-index:1">
+      <img src="${logoSrc}" alt="Peek logo" style="width:20px;height:20px" />
+      <div style="display:flex;flex-direction:column;gap:1px;align-items:flex-start">
+        <strong style="font-size:14px;letter-spacing:-0.01em">Peek</strong>
+      </div>
+      <button id="__peek_cancel__" style="margin-left:auto;background:none;border:none;cursor:pointer;color:${THEME.inkMuted};font-size:18px;line-height:1;padding:4px;transition:color .15s" aria-label="Close">×</button>
     </div>
-    <div style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px">
+    <div style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px;background:${THEME.canvas}">
       <div>
-        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;display:block;margin-bottom:6px">Selector type</label>
-        <div id="__peek_mode__" style="display:flex;gap:4px">
-          ${(['css','xpath','text'] as SelectorType[]).map((m) => `
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:${THEME.inkMuted};display:block;margin-bottom:6px">Selector type</label>
+        <div id="__peek_mode__" style="display:flex;gap:6px">
+          ${(['css', 'xpath', 'text'] as SelectorType[])
+            .map(
+              (m) => `
             <button data-mode="${m}" style="
-              flex:1;padding:5px;border-radius:5px;font-size:12px;cursor:pointer;
-              border:1px solid ${m === selectorMode ? '#111' : '#d1d5db'};
-              background:${m === selectorMode ? '#111' : '#fff'};
-              color:${m === selectorMode ? '#fff' : '#374151'};
-              font-weight:${m === selectorMode ? '600' : '400'};
+              flex:1;padding:7px 8px;border-radius:8px;font-size:12px;cursor:pointer;
+              border:1px solid ${m === selectorMode ? THEME.accent : THEME.line};
+              background:${m === selectorMode ? THEME.accent : THEME.surface};
+              color:${m === selectorMode ? '#0B1220' : THEME.inkSoft};
+              font-weight:${m === selectorMode ? '700' : '500'};
+              box-shadow:${m === selectorMode ? '0 6px 16px rgba(34,197,94,0.25)' : 'none'};
+              transition: border-color .15s, box-shadow .15s;
             ">${m.toUpperCase()}</button>
-          `).join('')}
+          `,
+            )
+            .join('')}
         </div>
       </div>
       <div>
-        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;display:block;margin-bottom:6px">Selector</label>
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:${THEME.inkMuted};display:block;margin-bottom:6px">Selector</label>
         <textarea id="__peek_selector__" rows="3" style="
-          width:100%;padding:7px 9px;border:1px solid #d1d5db;border-radius:6px;
-          font:12px/1.5 'Menlo','Monaco',monospace;resize:vertical;
-          box-sizing:border-box;outline:none;
+          width:100%;padding:9px 11px;border:1px solid ${THEME.line};border-radius:8px;
+          font:12px/1.6 'Menlo','Monaco',monospace;resize:vertical;
+          box-sizing:border-box;outline:none;background:${THEME.surface};color:${THEME.inkSoft};
+          box-shadow: inset 0 1px 2px rgba(15,23,42,0.04);
         ">${currentSelector}</textarea>
-        <p id="__peek_sel_status__" style="font-size:11px;color:#6b7280;margin-top:4px"></p>
+        <p id="__peek_sel_status__" style="font-size:11px;color:${THEME.inkMuted};margin-top:6px"></p>
       </div>
       <div>
-        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;display:block;margin-bottom:6px">Content preview</label>
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:${THEME.inkMuted};display:block;margin-bottom:6px">Content preview</label>
         <div id="__peek_preview__" style="
-          font-size:12px;line-height:1.5;color:#374151;
-          background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;
-          padding:8px 10px;max-height:120px;overflow-y:auto;
+          font-size:12px;line-height:1.6;color:${THEME.inkSoft};
+          background:${THEME.ghost};border:1px solid ${THEME.line};border-radius:8px;
+          padding:10px 12px;max-height:140px;overflow-y:auto;
           white-space:pre-wrap;word-break:break-word;
         ">${escapeHtml(preview.slice(0, 500))}</div>
       </div>
       <div>
-        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;display:block;margin-bottom:6px">URL</label>
-        <p style="font-size:12px;color:#374151;word-break:break-all">${escapeHtml(window.location.href)}</p>
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:${THEME.inkMuted};display:block;margin-bottom:6px">URL</label>
+        <p style="font-size:12px;color:${THEME.inkSoft};word-break:break-all">${escapeHtml(window.location.href)}</p>
       </div>
     </div>
-    <div style="padding:12px 14px;border-top:1px solid #e5e7eb;display:flex;gap:8px">
+    <div style="padding:12px 14px;border-top:1px solid ${THEME.line};display:flex;gap:8px;background:${THEME.surface}">
       <button id="__peek_save__" style="
-        flex:1;padding:9px;background:#111;color:#fff;border:none;
-        border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;
+        flex:1;padding:11px;background:${THEME.accent};color:#0B1220;border:none;
+        border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;
+        box-shadow:0 10px 30px rgba(34,197,94,0.35);
       ">Save to Peek</button>
     </div>
     <div id="__peek_toast__" style="
       position:absolute;bottom:60px;left:14px;right:14px;
-      padding:10px 12px;border-radius:6px;font-size:12px;
-      display:none;text-align:center;font-weight:500;
+      padding:10px 12px;border-radius:8px;font-size:12px;
+      display:none;text-align:center;font-weight:600;
     "></div>
   `
   shadow.appendChild(panelEl)
@@ -371,10 +412,11 @@ function renderPanel() {
     panelEl!.querySelectorAll('[data-mode]').forEach((b: Element) => {
       const el = b as HTMLElement
       const active = el.dataset['mode'] === selectorMode
-      el.style.border = `1px solid ${active ? '#111' : '#d1d5db'}`
-      el.style.background = active ? '#111' : '#fff'
-      el.style.color = active ? '#fff' : '#374151'
-      el.style.fontWeight = active ? '600' : '400'
+      el.style.border = `1px solid ${active ? THEME.accent : THEME.line}`
+      el.style.background = active ? THEME.accent : THEME.surface
+      el.style.color = active ? '#0B1220' : THEME.inkSoft
+      el.style.fontWeight = active ? '700' : '500'
+      el.style.boxShadow = active ? '0 6px 16px rgba(34,197,94,0.25)' : 'none'
     })
     updatePanelSelector()
     updatePanelPreview()
@@ -443,7 +485,7 @@ async function saveItem() {
   saveBtn.disabled = true
   saveBtn.textContent = 'Saving…'
 
-  const auth = await chrome.runtime.sendMessage({ type: 'GET_AUTH' }) as AuthStorage
+  const auth = (await chrome.runtime.sendMessage({ type: 'GET_AUTH' })) as AuthStorage
 
   if (!auth.accessToken) {
     showToast('Session expired — please sign in again', 'error')
@@ -458,7 +500,7 @@ async function saveItem() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.accessToken}`,
+        Authorization: `Bearer ${auth.accessToken}`,
       },
       body: JSON.stringify({ url: window.location.href, selector: currentSelector }),
     })
@@ -472,7 +514,7 @@ async function saveItem() {
     }
 
     if (!res.ok) {
-      const body = await res.json() as { error?: string }
+      const body = (await res.json()) as { error?: string }
       showToast(body.error ?? 'Something went wrong', 'error')
       saveBtn.disabled = false
       saveBtn.textContent = 'Save to Peek'
@@ -496,7 +538,9 @@ function showToast(msg: string, kind: 'success' | 'error') {
   toast.style.background = kind === 'success' ? '#d1fae5' : '#fee2e2'
   toast.style.color = kind === 'success' ? '#065f46' : '#991b1b'
   if (kind === 'success') return // stays until cleanup
-  setTimeout(() => { toast.style.display = 'none' }, 3000)
+  setTimeout(() => {
+    toast.style.display = 'none'
+  }, 3000)
 }
 
 // ─── Utility ──────────────────────────────────────────────────────────────────

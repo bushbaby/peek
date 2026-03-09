@@ -76,9 +76,7 @@ function buildNthChildPath(el: Element): string {
 
     const tag = node.tagName.toLowerCase()
     const curTag = node.tagName
-    const siblings = Array.from(parentEl.children).filter(
-      (c: Element) => c.tagName === curTag,
-    )
+    const siblings = Array.from(parentEl.children).filter((c: Element) => c.tagName === curTag)
     const index = siblings.indexOf(node) + 1
     parts.unshift(siblings.length === 1 ? tag : `${tag}:nth-child(${index})`)
     node = parentEl

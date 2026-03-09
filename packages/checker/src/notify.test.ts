@@ -10,11 +10,17 @@ describe('selector_missing', () => {
   const missing = { error: 'selector_missing' }
 
   it('notifies when selector disappears from ok', () => {
-    expect(decideNotification('ok', HASH_A, missing)).toMatchObject({ kind: 'error', status: 'selector_missing' })
+    expect(decideNotification('ok', HASH_A, missing)).toMatchObject({
+      kind: 'error',
+      status: 'selector_missing',
+    })
   })
 
   it('notifies when selector disappears from changed', () => {
-    expect(decideNotification('changed', HASH_A, missing)).toMatchObject({ kind: 'error', status: 'selector_missing' })
+    expect(decideNotification('changed', HASH_A, missing)).toMatchObject({
+      kind: 'error',
+      status: 'selector_missing',
+    })
   })
 
   it('does not notify when already missing', () => {
@@ -44,11 +50,17 @@ describe('error', () => {
   })
 
   it('notifies when transitioning from changed to error', () => {
-    expect(decideNotification('changed', HASH_A, err)).toMatchObject({ kind: 'error', status: 'error' })
+    expect(decideNotification('changed', HASH_A, err)).toMatchObject({
+      kind: 'error',
+      status: 'error',
+    })
   })
 
   it('notifies when transitioning from selector_missing to error', () => {
-    expect(decideNotification('selector_missing', null, err)).toMatchObject({ kind: 'error', status: 'error' })
+    expect(decideNotification('selector_missing', null, err)).toMatchObject({
+      kind: 'error',
+      status: 'error',
+    })
   })
 
   it('does not notify when already in error state', () => {
@@ -72,14 +84,20 @@ describe('content changed', () => {
   })
 
   it('notifies when selector comes back after missing (same hash as before)', () => {
-    expect(decideNotification('selector_missing', HASH_A, { newHash: HASH_A })).toEqual({ kind: 'changed' })
+    expect(decideNotification('selector_missing', HASH_A, { newHash: HASH_A })).toEqual({
+      kind: 'changed',
+    })
   })
 
   it('notifies when selector comes back after missing (different hash)', () => {
-    expect(decideNotification('selector_missing', HASH_A, { newHash: HASH_B })).toEqual({ kind: 'changed' })
+    expect(decideNotification('selector_missing', HASH_A, { newHash: HASH_B })).toEqual({
+      kind: 'changed',
+    })
   })
 
   it('notifies when selector comes back after missing (null previous hash)', () => {
-    expect(decideNotification('selector_missing', null, { newHash: HASH_A })).toEqual({ kind: 'changed' })
+    expect(decideNotification('selector_missing', null, { newHash: HASH_A })).toEqual({
+      kind: 'changed',
+    })
   })
 })
