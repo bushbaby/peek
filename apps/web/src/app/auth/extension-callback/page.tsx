@@ -16,7 +16,7 @@ export default function ExtensionCallbackPage() {
       const {
         data: { session },
         error,
-      } = await supabase.auth.getSession()
+      } = await supabase.auth.refreshSession()
 
       if (error || !session) {
         setStatus('error')

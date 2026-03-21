@@ -555,5 +555,19 @@ function escapeHtml(s: string): string {
 // ─── Bootstrap ────────────────────────────────────────────────────────────────
 
 chrome.runtime.onMessage.addListener((msg: { type: string }) => {
-  if (msg.type === 'START_PICKER') init()
+  if (msg.type === 'START_PICKER') {
+    // Always clean up first so re-activating after an error gives a fresh start.
+    cleanup()
+    init()
+  }
 })
+
+// When new tokens are stored (after re-auth), clear any session-expired error
+// on the open panel so the user doesn't need to refresh the page.
+chrome.storage.onChanged.addListener(
+  (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
+    if (area !== 'local' || !changes['accessToken']?.newValue) return
+    const toast = panelEl?.querySelector('#__peek_toast__') as HTMLElement | null
+    if (toast) toast.style.display = 'none'
+  },
+)
