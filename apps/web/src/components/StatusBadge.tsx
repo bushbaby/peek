@@ -1,10 +1,13 @@
 import type { CheckStatus } from '@peek/db'
 import { Badge } from './ui/badge'
 
-const CONFIG: Record<
-  NonNullable<CheckStatus>,
-  { label: string; className: string; dot: string }
-> = {
+const CONFIG: Record<CheckStatus, { label: string; className: string; dot: string }> = {
+  new: {
+    label: 'Not checked',
+    className:
+      'bg-zinc-100 text-zinc-600 ring-1 ring-zinc-200 dark:bg-zinc-500/15 dark:text-zinc-400 dark:ring-zinc-500/30',
+    dot: 'bg-zinc-400',
+  },
   ok: {
     label: 'No change',
     className:
@@ -31,10 +34,7 @@ const CONFIG: Record<
   },
 }
 
-export function StatusBadge({ status }: { status: CheckStatus | null }) {
-  if (!status) {
-    return <span className="text-xs text-muted-foreground">Not checked</span>
-  }
+export function StatusBadge({ status }: { status: CheckStatus }) {
   const { label, className, dot } = CONFIG[status]
   return (
     <Badge className={className}>
