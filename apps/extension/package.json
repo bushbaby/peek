@@ -1,11 +1,13 @@
 {
   "name": "@peek/extension",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build && zip -r ../web/public/peek-extension.zip dist/",
+    "build": "node scripts/sync-version.mjs && vite build && node scripts/package-extension.mjs",
+    "sync-version": "node scripts/sync-version.mjs",
+    "package": "node scripts/package-extension.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

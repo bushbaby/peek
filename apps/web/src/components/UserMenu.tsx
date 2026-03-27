@@ -126,12 +126,11 @@ export function UserMenu({ userEmail }: UserMenuProps) {
           </DialogHeader>
 
           <a
-            href="/peek-extension.zip"
-            download
+            href="/api/extension/latest"
             className="flex items-center justify-center gap-2 w-full rounded-md bg-ink text-canvas px-3 py-2 text-xs font-semibold hover:opacity-90 transition-opacity"
           >
             <DownloadIcon className="h-3.5 w-3.5" />
-            Download peek-extension.zip
+            Download latest extension
           </a>
 
           <ol className="space-y-2 text-xs text-ink-soft list-none">
