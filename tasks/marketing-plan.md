@@ -17,24 +17,40 @@ Peek monitors any element on any webpage and emails you when it changes — no c
 
 ## 2. Ideal Customer Profile (ICP)
 
-### Primary: The Technical Researcher
+### Primary: The Developer Who Killed a Scraper
 
-- Developer or analyst who wants to monitor price/stock/status fields without maintaining a script
-- Monitors competitor pricing, job boards, government tender pages, open-source release pages
-- Values precision and reliability over pretty dashboards
-- Pain: writing and maintaining Python scrapers for simple "has this changed?" tasks
+- **Who:** Solo developer, DevOps engineer, or technical analyst — individual contributor, not a team
+- **Trigger event:** Just spent time writing or maintaining a scraper for a trivially simple "did this change?" task, or just had one break
+- **Use cases:** Open-source dependency/release monitoring, competitor pricing spot-checks, job board freshness, API status pages, staging vs production diff
+- **What they value:** Technical correctness, no-nonsense UX, self-hostable option (trust signal), no vendor lock-in
+- **Conversion path:** Discovers via HN or Reddit → reads the technical explanation → signs up and has their first item tracked in 5 minutes
+- **Willingness to pay:** Medium — they understand the value but have high DIY tolerance; free tier must genuinely replace the script, not just demo the concept
 
-### Secondary: The Power User (non-technical)
+### Secondary: The High-Stakes Manual Checker
 
-- Researcher, journalist, procurement professional
-- Monitors specific fields on websites they visit regularly
-- Pain: checking the same pages manually, missing changes
-- Entry point: the browser extension (visual selector lowers the bar)
+- **Who:** Procurement professional, compliance officer, academic researcher, or journalist — non-technical, but monitoring something that matters
+- **Trigger event:** Missed a change and it cost them something — a tender deadline, a competitor price move, a regulatory update, a product restock
+- **Use cases:** Government procurement / tender portals, supplier pricing pages, regulatory or policy pages, niche product restock — anything checked on a recurring manual schedule
+- **What they value:** Reliability ("will it actually email me?"), simplicity (no CSS knowledge required), and time saved on a repetitive task with real consequences
+- **Conversion path:** Searches "get notified when webpage changes" → lands on comparison article or landing page → converts on demo video, not technical copy
+- **Willingness to pay:** Higher than Primary — stakes justify a monthly charge, especially if one missed change = real cost
 
-### Negative ICP:
+### Tertiary: The Waitlist/Restock Watcher
 
-- Enterprise needing SLA guarantees or SSO
-- Users wanting to scrape structured data at scale (that's a different product)
+- **Who:** Anyone waiting on a limited product, GPU drop, concert ticket, visa slot, rental listing
+- **Trigger event:** Currently manually refreshing a page multiple times a day
+- **Use cases:** GPU/console restocks, visa appointment slots, scholarship/grant portals, apartment listings, limited-edition drops
+- **What they value:** Speed (notification latency matters), simplicity, free tier
+- **Conversion path:** Word-of-mouth ("I used Peek to catch the RTX drop") or targeted Reddit posts
+- **Note:** High volume, lower retention once the item is obtained — good for top-of-funnel visibility and social proof, not the monetisation core
+
+### Negative ICP
+
+- **Sub-minute pollers:** Need infra-grade tooling (Datadog, UptimeRobot) — wrong product, wrong price point
+- **Scale scrapers:** Want structured data extraction across hundreds of pages — different product entirely
+- **Collaborative teams:** Need shared workspaces, role permissions, audit history — premature for current scope
+- **API-first integrations:** Want programmatic setup and webhook output — a future Pro/API tier, not current Peek
+- **Enterprise:** SLA, SSO, procurement process — cost of sale too high at current stage
 
 ---
 
