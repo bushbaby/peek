@@ -84,3 +84,28 @@ export async function getUserEmail(client: SupabaseClient, userId: string): Prom
   if (!email) throw new Error(`No email found for user ${userId}`)
   return email
 }
+
+// --- Nudge queries ---
+
+export interface NudgeCandidate {
+  user_id: string
+  /** URL of the user's first tracked item — used for ICP detection */
+  first_item_url: string
+}
+
+/**
+ * Returns users whose first tracked item was created 24+ hours ago and who
+ * have not yet received a nudge email (no row in user_nudges).
+ */
+export async function getUsersForNudge(client: SupabaseClient): Promise<NudgeCandidate[]> {
+  const { data, error } = await client.rpc('get_nudge_candidates')
+  if (error) throw error
+  return (data ?? []) as NudgeCandidate[]
+}
+
+export async function markNudgeSent(client: SupabaseClient, userId: string): Promise<void> {
+  const { error } = await client
+    .from('user_nudges')
+    .insert({ user_id: userId })
+  if (error) throw error
+}

@@ -1,9 +1,10 @@
-import { createServiceRoleClient, getTrackedItems, updateSnapshot, getUserEmail } from '@peek/db'
+import { createServiceRoleClient, getTrackedItems, updateSnapshot, getUserEmail, getUsersForNudge, markNudgeSent } from '@peek/db'
 import {
   fetchPage,
   computeSnapshot,
   sendNotification,
   sendErrorNotification,
+  sendNudgeEmail,
   decideNotification,
 } from '@peek/checker'
 import type { SmtpConfig } from '@peek/checker'
@@ -102,6 +103,21 @@ async function main() {
   }
 
   console.log(`[worker] Check run complete at ${new Date().toISOString()}`)
+
+  // ── Nudge pass ──────────────────────────────────────────────────────────────
+  const nudgeCandidates = await getUsersForNudge(supabase)
+  console.log(`[worker] ${nudgeCandidates.length} nudge candidate(s)`)
+
+  for (const candidate of nudgeCandidates) {
+    try {
+      const email = await getUserEmail(supabase, candidate.user_id)
+      await sendNudgeEmail(smtpConfig, email, candidate.first_item_url)
+      await markNudgeSent(supabase, candidate.user_id)
+      console.log(`[worker] Nudge sent to ${email}`)
+    } catch (err) {
+      console.error(`[worker] Failed to send nudge for user ${candidate.user_id}:`, err)
+    }
+  }
 }
 
 main().catch((err) => {
